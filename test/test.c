@@ -84,9 +84,7 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-
     ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &rung);
-
     print_result(result_in, result_out, result_in_qty, result_out_qty);
 
     ladder_rung_destroy(&rung);
@@ -106,9 +104,7 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-
     ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &rung);
-
     print_result(result_in, result_out, result_in_qty, result_out_qty);
 
     ladder_rung_destroy(&rung);
@@ -130,9 +126,7 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-
     ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &rung);
-
     print_result(result_in, result_out, result_in_qty, result_out_qty);
 
     ladder_rung_destroy(&rung);
@@ -154,9 +148,7 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-
     ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &rung);
-
     print_result(result_in, result_out, result_in_qty, result_out_qty);
 
     ladder_rung_destroy(&rung);
@@ -182,9 +174,7 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-
     ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &rung);
-
     print_result(result_in, result_out, result_in_qty, result_out_qty);
 
     ladder_rung_destroy(&rung);
