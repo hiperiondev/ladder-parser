@@ -12,7 +12,7 @@ C_DEPS += \
 test/%.o: ../test/%.c test/subdir.mk
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C Compiler'
-	gcc -I"../external/list" -I"../ladder-parser" -I"../external/STC/include" -I"../external/STC/include/stc" -O3 -g3 -ftest-coverage -fprofile-arcs -Wall -c -fmessage-length=0 -Wno-incompatible-pointer-types -Wno-switch -Wno-bool-compare -Wno-maybe-uninitialized -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
+	gcc -I"../external/list" -I"../ladder-parser" -I"../external/STC/include" -I"../external/STC/include/stc" -O3 -g3 -Wall -c -fmessage-length=0 -Wno-incompatible-pointer-types -Wno-switch -Wno-bool-compare -Wno-maybe-uninitialized -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
