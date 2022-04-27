@@ -52,53 +52,43 @@ void ladder_remove_redundant_parentheses(cstr *expression) {
     c[1] = '\0';
     result = cstr_with_capacity(1);
 
-    // Assume given expression
     int n = cstr_length(*expression);
     if (n == 0) {
         printf("err: length 0\n");
         return;
     }
 
-    // Valid Parentheses checker
     bool check[n];
     for (int i = 0; i < n; ++i) {
         check[i] = true;
     }
 
-    // Create an empty record
     iStack record = iStack_init();
 
-    // Execute loop through by size of n
     for (int i = 0; i < n; ++i) {
         if (expression->str[i] == ')') {
             if (iStack_empty(record)) {
-                // Expression are not valid
                 printf("err: Expression are not valid\n");
                 return;
             } else if (expression->str[*iStack_top(&record)] == '(') {
                 check[i] = false;
                 check[*iStack_top(&record)] = false;
-                // Remove top element of stacks
                 iStack_pop(&record);
             } else {
                 while (iStack_empty(record) == false && expression->str[*iStack_top(&record)] != '(') {
-                    // Remove element until not get open parentheses
                     iStack_pop(&record);
                 }
                 if (iStack_empty(record)) {
-                    // Expression are not valid
                     printf("err: Expression are not valid\n");
                     return;
                 }
                 iStack_pop(&record);
             }
         } else {
-            // Insert position of expression character
             iStack_push(&record, i);
         }
     }
 
-    // This is collects resultant expression
     for (int j = 0; j < n; ++j) {
         if (check[j]) {
             c[0] = expression->str[j];

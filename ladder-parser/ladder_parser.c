@@ -54,7 +54,7 @@ typedef struct cell {
 
 void ladder_identify_char(rung_t **rung, cell_t ***lns) {
     int line, row, char_pos = 0;
-    char c, str[254];
+    char c = 0, str[254];
     bool neg = false;
     memset(str, 0, sizeof(str));
 
