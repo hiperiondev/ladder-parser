@@ -27,15 +27,6 @@
 
 #include "cstr.h"
 
-typedef struct cell {
-     int type;
-    bool neg;
-    union {
-        char *str;
-         int index;
-    };
-} cell_t;
-
 typedef struct rung {
       cstr *line;
        int line_qty;

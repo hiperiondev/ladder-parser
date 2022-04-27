@@ -75,4 +75,3 @@ void ladder_rung_print(rung_t *rung) {
         printf("%s\n", rung->line[n].str);
     }
 }
-

@@ -43,7 +43,7 @@ struct Stack {
     size_t stackptr;
 };
 
-char* infix_to_postfix(const char *inf, size_t len);
+static char* infix_to_postfix(const char *inf, size_t len);
 
 void ladder_remove_redundant_parentheses(cstr *expression) {
     char c[2];
@@ -163,7 +163,7 @@ static void destroy_stack(Stack **s) {
     *s = NULL;
 }
 
-char* infix_to_postfix(const char *inf, size_t len) {
+static char* infix_to_postfix(const char *inf, size_t len) {
     Stack *postfix, *operators;
     if (create_stack(len + 1, &postfix) || create_stack(len, &operators))
         return NULL;

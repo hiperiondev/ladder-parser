@@ -43,6 +43,14 @@ enum CELL_TYPE {
     CELL_SPACE,
 };
 
+typedef struct cell {
+     int type;
+    bool neg;
+    union {
+        char *str;
+         int index;
+    };
+} cell_t;
 
 void ladder_identify_char(rung_t **rung, cell_t ***lns) {
     int line, row, char_pos = 0;
