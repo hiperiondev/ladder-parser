@@ -154,7 +154,7 @@ int ladder_unify_nodes(rung_t **rung, cell_t ***lns) {
 #ifdef LADDER_DEBUG
     printf("\n- ladder_unify_nodes -\n");
     for (line = 0; line < (*rung)->line_qty; line++) {
-        for (column = 0; column < cstr_length((*rung)->line[line]); column++) {
+        for (column = 0; column < (*rung)->line_len; column++) {
             type = (*lns)[line][column].type;
             switch (type) {
                 case CELL_NONE:
@@ -509,7 +509,7 @@ void ladder_substitute_nodes(int pos1, int pos2, cstr *str_in, cstr *str_out) {
         cstr_assign_n(&left, str_in[line].str, n - 1);
         cstr_assign(&right, str_in[line].str + n + 2);
 
-        // check if used by out
+        // if used by out not substitute
         for (column = 0; column < pos2; column++) {
             int find = cstr_find(str_out[column], left.str);
             if (find != -1) {
