@@ -36,17 +36,16 @@ void print_result(cstr *result_in, cstr *result_out, int result_in_qty, int resu
     int n;
     cstr postfix;
 
-    printf("\n---------------------------\n");
-    printf("END RESULT:\n");
+    printf("\n--------- END RESULT ---------\n\n");
     printf("[IN]: \n");
     for (n = 0; n < result_in_qty; n++) {
         if (cstr_size(result_in[n]) > 0) {
             ladder_remove_redundant_parentheses(&result_in[n]);
-            printf("  INFIX: %s\n", result_in[n].str);
-            printf("POSTFIX: ");
+            printf("      INFIX: %s\n", result_in[n].str);
+            printf("    POSTFIX: ");
             postfix = cstr_with_capacity(1);
             ladder_to_postfix(&postfix, result_in[n].str);
-            printf("%s\n", postfix.str);
+            printf("%s\n\n", postfix.str);
             cstr_drop(&postfix);
         }
     }
@@ -54,15 +53,15 @@ void print_result(cstr *result_in, cstr *result_out, int result_in_qty, int resu
     for (n = 0; n < result_out_qty; n++) {
         if (cstr_size(result_out[n]) > 0) {
             ladder_remove_redundant_parentheses(&result_out[n]);
-            printf("  INFIX: %s\n", result_out[n].str);
-            printf("POSTFIX: ");
+            printf("      INFIX: %s\n", result_out[n].str);
+            printf("    POSTFIX: ");
             postfix = cstr_with_capacity(1);
             ladder_to_postfix(&postfix, result_out[n].str);
-            printf("%s\n", postfix.str);
+            printf("%s\n\n", postfix.str);
             cstr_drop(&postfix);
         }
     }
-    printf("\n");
+    printf("------------------------------\n");
 }
 
 int main(void) {

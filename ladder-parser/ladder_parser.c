@@ -334,8 +334,8 @@ int ladder_allocate_list_blocks(cell_t ***blocks_tmp, rung_t **rung, list_t ***b
     return block;
 }
 
-void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cstr **str_in, cstr **str_out, int *str_in_qty, int *str_out_qty) { // join nodes (equal right nodes are OR'ed)
-    int block, node;
+void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cstr **str_in, cstr **str_out, int *str_in_qty, int *str_out_qty, int **str_in_len, int **str_out_len) { // join nodes (equal right nodes are OR'ed)
+    int block, node, cnt;
     bool and, or, has_node;
     list_node_t *node_list;
     list_iterator_t *it;
@@ -353,6 +353,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
     // inputs
     for (node = 0; node <= nodes_qty; node++) {
         or = false;
+        cnt = 1;
 
         for (block = 0; block < blocks_qty; block++) {
             item = list_at((*blocks_list)[block], -1)->val;
@@ -367,6 +368,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
                 if (or) {
                     cstr_printf(&str_tmp,"|");
                     cstr_append(&((*str_in)[*str_in_qty]), str_tmp.str);
+                    cnt++;
                 }
 
                 cstr_printf(&str_tmp, " ( ");
@@ -384,6 +386,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
                         cstr_printf(&str_tmp, " & ");
                         cstr_append(&((*str_in)[*str_in_qty]), str_tmp.str);
                         and = false;
+                        cnt++;
                     }
 
                     item = node_list->val;
@@ -409,8 +412,10 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
         }
 
         if (has_node) {
+            (*str_in_len)[*str_in_qty] = cnt;
             ++(*str_in_qty);
             *str_in = realloc(*str_in, (*str_in_qty + 1) * sizeof(cstr*));
+            *str_in_len = realloc(*str_in_len, (*str_in_qty + 1) * sizeof(int));
             (*str_in)[*str_in_qty] = cstr_with_capacity(1);
             has_node = false;
         }
@@ -421,7 +426,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
     printf("IN (%d):\n", *str_in_qty);
     for (block = 0; block < *str_in_qty; block++)
         if (cstr_length((*str_in)[block]) > 0)
-            printf("%s\n", (*str_in)[block].str);
+            printf("(%d) %s\n", (*str_in_len)[block], (*str_in)[block].str);
     printf("end IN\n");
 #endif
 
@@ -430,6 +435,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
     *str_out_qty = 0;
     for (block = 0; block < blocks_qty; block++) {
         item = list_at((*blocks_list)[block], -1)->val;
+        cnt = 1;
 
         if (item->type == CELL_STR) {
             cstr_printf(&str_tmp, "%s =", item->str);
@@ -438,6 +444,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
             if (or) {
                 cstr_printf(&str_tmp, "|");
                 cstr_append(&((*str_out)[*str_out_qty]), str_tmp.str);
+                cnt++;
             }
 
             cstr_printf(&str_tmp, " ( ");
@@ -453,6 +460,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
                     cstr_printf(&str_tmp, " & ");
                     cstr_append(&((*str_out)[*str_out_qty]), str_tmp.str);
                     and = false;
+                    cnt++;
                 }
 
                 item = node_list->val;
@@ -478,8 +486,10 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
         }
 
         if (cstr_size((*str_out)[*str_out_qty]) != 0) {
+            (*str_out_len)[*str_out_qty] = cnt;
             ++(*str_out_qty);
             *str_out = realloc(*str_out, (*str_out_qty + 1) * sizeof(cstr*));
+            *str_out_len = realloc(*str_out_len, (*str_out_qty + 1) * sizeof(int));
             (*str_out)[*str_out_qty] = cstr_with_capacity(1);
         }
     }
@@ -490,12 +500,12 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
     printf("\nOUT (%d):\n", *str_out_qty);
     for (block = 0; block < *str_out_qty; block++)
         if (cstr_length((*str_out)[block]) > 0)
-            printf("%s\n", (*str_out)[block].str);
+            printf("(%d) %s\n", (*str_out_len)[block], (*str_out)[block].str);
     printf("end OUT\n");
 #endif
 }
 
-void ladder_substitute_nodes(int pos1, int pos2, cstr *str_in, cstr *str_out) {
+void ladder_substitute_nodes(int pos1, int pos2, cstr *str_in, cstr *str_out, int *str_in_len, int *str_out_len, int minimun_len_replace) {
     int line, column, n;
     bool neg = false;
     cstr tmp = cstr_with_capacity(1);
@@ -512,7 +522,7 @@ void ladder_substitute_nodes(int pos1, int pos2, cstr *str_in, cstr *str_out) {
         // if used by out not substitute
         for (column = 0; column < pos2; column++) {
             int find = cstr_find(str_out[column], left.str);
-            if (find != -1) {
+            if (find != -1 && str_in_len[line] > minimun_len_replace) {
                 cstr_clear(&left);
                 cstr_clear(&right);
                 neg = true;
@@ -533,7 +543,21 @@ void ladder_substitute_nodes(int pos1, int pos2, cstr *str_in, cstr *str_out) {
         for (column = 0; column < pos1; column++) {
             if (column == line)
                 continue;
+
+            if ((int)cstr_find(str_in[column], left.str) != -1)
+                str_in_len[column] = str_in_len[column] + str_in_len[line] - 1;
+
             cstr_replace_all(&str_in[column], left.str, tmp.str);
+        }
+
+        for (column = 0; column < pos2; column++) {
+            if (column == line)
+                continue;
+
+            if ((int) cstr_find(str_out[column], left.str) != -1)
+                str_out_len[column] = str_out_len[column] + str_out_len[line] - 1;
+
+            cstr_replace_all(&str_out[column], left.str, tmp.str);
         }
 
         cstr_clear(&str_in[line]);
@@ -548,7 +572,7 @@ void ladder_substitute_nodes(int pos1, int pos2, cstr *str_in, cstr *str_out) {
 }
 
 void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *result_out_qty, rung_t **rung) {
-    int n, pos, str_in_qty, str_out_qty, blocks_qty, nodes_qty;
+    int n, pos, str_in_qty, str_out_qty, blocks_qty, nodes_qty, *str_in_len, *str_out_len;
     cstr *str_in, *str_out;
     cell_t **blocks_tmp;
     cell_t **lns;
@@ -570,8 +594,10 @@ void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *
 
     str_in = malloc(sizeof(cstr*));
     str_out = malloc(sizeof(cstr*));
+    str_in_len = malloc(sizeof(int));
+    str_out_len = malloc(sizeof(int));
 
-    ladder_join_nodes(&blocks_list, nodes_qty, blocks_qty, &str_in, &str_out, &str_in_qty, &str_out_qty);
+    ladder_join_nodes(&blocks_list, nodes_qty, blocks_qty, &str_in, &str_out, &str_in_qty, &str_out_qty, &str_in_len, &str_out_len);
 
     for (n = 0; n < blocks_qty; n++) {
         free(blocks_tmp[n]);
@@ -583,7 +609,10 @@ void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *
     }
     free(blocks_list);
 
-    ladder_substitute_nodes(str_in_qty, str_out_qty, str_in, str_out);
+    ladder_substitute_nodes(str_in_qty, str_out_qty, str_in, str_out, str_in_len, str_out_len, 1);
+
+    free(str_in_len);
+    free(str_out_len);
 
     for (n = 0; n < str_in_qty; n++) {
         while ((pos = cstr_find(str_in[n], "( ")) > 0)
