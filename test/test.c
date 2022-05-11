@@ -210,6 +210,7 @@ int main(void) {
     ladder_rung_add_line(&rung, "     $b--{gt%2_in[0]}                           |       ");
     ladder_rung_add_line(&rung, "     $c--{gt%2_in[1]}                           |       ");
     ladder_rung_add_line(&rung, "         {gt%2_out}-----------------------------+       ");
+    ladder_rung_add_line(&rung, "                                                |       ");
     ladder_rung_add_line(&rung, " K--+--L---M---/N-------------------------------+       ");
     ladder_rung_add_line(&rung, "    |                                           |       ");
     ladder_rung_add_line(&rung, "    +--{eq%3_en}                                |       ");
