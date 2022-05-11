@@ -88,6 +88,8 @@ int main(void) {
     print_result(result_in, result_out, result_in_qty, result_out_qty);
 
     ladder_rung_destroy(&rung);
+    cstr_drop(result_in);
+    cstr_drop(result_out);
 
     /////////////////////////
 
@@ -108,6 +110,8 @@ int main(void) {
     print_result(result_in, result_out, result_in_qty, result_out_qty);
 
     ladder_rung_destroy(&rung);
+    cstr_drop(result_in);
+    cstr_drop(result_out);
 
     /////////////////////////
 
@@ -130,6 +134,8 @@ int main(void) {
     print_result(result_in, result_out, result_in_qty, result_out_qty);
 
     ladder_rung_destroy(&rung);
+    cstr_drop(result_in);
+    cstr_drop(result_out);
 
     /////////////////////////
 
@@ -152,6 +158,8 @@ int main(void) {
     print_result(result_in, result_out, result_in_qty, result_out_qty);
 
     ladder_rung_destroy(&rung);
+    cstr_drop(result_in);
+    cstr_drop(result_out);
 
     /////////////////////////
 
@@ -178,6 +186,10 @@ int main(void) {
     print_result(result_in, result_out, result_in_qty, result_out_qty);
 
     ladder_rung_destroy(&rung);
+    cstr_drop(result_in);
+    cstr_drop(result_out);
+
+    /////////////////////////
 
     printf("-------------------< TEST 6 >-------------------\n\n");
     ladder_rung_init(&rung);
@@ -213,6 +225,8 @@ int main(void) {
     print_result(result_in, result_out, result_in_qty, result_out_qty);
 
     ladder_rung_destroy(&rung);
+    cstr_drop(result_in);
+    cstr_drop(result_out);
 
     return EXIT_SUCCESS;
 }
