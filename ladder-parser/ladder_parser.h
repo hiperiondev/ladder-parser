@@ -30,7 +30,7 @@
 #include "cstr.h"
 #include "rung.h"
 
-#define LADDER_DEBUG
+//#define LADDER_DEBUG
 
 void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *result_out_qty, rung_t **rung);
 

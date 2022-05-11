@@ -36,7 +36,7 @@ void print_result(cstr *result_in, cstr *result_out, int result_in_qty, int resu
     int n;
     cstr postfix;
 
-    printf("\n--------- END RESULT ---------\n\n");
+    printf("\n--------- FINAL RESULT ---------\n\n");
     printf("[IN]: \n");
     for (n = 0; n < result_in_qty; n++) {
         if (cstr_size(result_in[n]) > 0) {
@@ -61,7 +61,7 @@ void print_result(cstr *result_in, cstr *result_out, int result_in_qty, int resu
             cstr_drop(&postfix);
         }
     }
-    printf("------------------------------\n");
+    printf("--------------------------------\n\n");
 }
 
 int main(void) {
