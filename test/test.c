@@ -225,7 +225,7 @@ int main(void) {
     ladder_rung_add_line(&rung, " V---+-----------------{eq%3_in[1]}  |             |       ");
     ladder_rung_add_line(&rung, "                                     |             |       ");
     ladder_rung_add_line(&rung, " W---+-----------------{eq%3_in[2]}  |             |       ");
-    ladder_rung_add_line(&rung, "     |                 {eq%3_eno}----+             |       ");
+    ladder_rung_add_line(&rung, "     |                 {eq%3_eno}----+----Z        |       ");
     ladder_rung_add_line(&rung, "     |                 {eq%3_out}------------------+       ");
     ladder_rung_add_line(&rung, " R---+--{mux%1_S[0]}                                       ");
 
