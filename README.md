@@ -12,7 +12,7 @@ Library for parse and simplify ladder diagram
 ### EXAMPLE
 ```
 - rung -
- A--+-+--------------/B-------------+---C---+------+-----Q 
+ A--+-+--------------/B-------------+---C---+------+--Y--Q 
     | |                             |       |      |       
  D--+ |                             +--/E---+      |       
     | |                             |       |      |       
@@ -59,8 +59,8 @@ Library for parse and simplify ladder diagram
 
 
 [OUT] 
-      INFIX: Q = (_N[5]) 
-    POSTFIX: Q = _N[5] 
+      INFIX: Q = (_N[5] & Y) 
+    POSTFIX: Q = _N[5] Y and 
 
       INFIX: Z = (_N[6]) 
     POSTFIX: Z = _N[6] 
