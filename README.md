@@ -35,7 +35,7 @@ Library for parse and simplify ladder diagram
  V---+-----------------{eq%3_in[1]}  |             |       
                                      |             |       
  W---+-----------------{eq%3_in[2]}  |             |       
-     |                 {eq%3_eno}----+             |       
+     |                 {eq%3_eno}----+----Z        |       
      |                 {eq%3_out}------------------+       
  R---+--{mux%1_S[0]}                                       
 
@@ -45,8 +45,11 @@ Library for parse and simplify ladder diagram
       INFIX: _N[2] = ((A) | (D) | (F)) 
     POSTFIX: _N[2] = A D or F or 
 
-      INFIX: _N[5] = ((((_N[2] & !B) | (!{mux%1_out})) & C) | (((_N[2] & !B) | (!{mux%1_out})) & !E) | (((_N[2] & !B) | (!{mux%1_out})) & G)) | (((K & L & M & !N) | ({eq%3_eno})) & !X) | ({eq%3_out}) 
-    POSTFIX: _N[5] = _N[2] B not and {mux%1_out} not or C and _N[2] B not and {mux%1_out} not or E not and or _N[2] B not and {mux%1_out} not or G and or K L and M and N not and {eq%3_eno} or X not and or {eq%3_out} or 
+      INFIX: _N[5] = ((((_N[2] & !B) | (!{mux%1_out})) & C) | (((_N[2] & !B) | (!{mux%1_out})) & !E) | (((_N[2] & !B) | (!{mux%1_out})) & G)) | (_N[6] & !X) | ({eq%3_out}) 
+    POSTFIX: _N[5] = _N[2] B not and {mux%1_out} not or C and _N[2] B not and {mux%1_out} not or E not and or _N[2] B not and {mux%1_out} not or G and or _N[6] X not and or {eq%3_out} or 
+
+      INFIX: _N[6] = (K & L & M & !N) | ({eq%3_eno}) 
+    POSTFIX: _N[6] = K L and M and N not and {eq%3_eno} or 
 
       INFIX: _N[7] = ($c) | (V) 
     POSTFIX: _N[7] = $c V or 
@@ -58,6 +61,9 @@ Library for parse and simplify ladder diagram
 [OUT] 
       INFIX: Q = (_N[5]) 
     POSTFIX: Q = _N[5] 
+
+      INFIX: Z = (_N[6]) 
+    POSTFIX: Z = _N[6] 
 
 
 [FUNCTIONS] 
