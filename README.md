@@ -23,9 +23,7 @@ Library for parse and simplify ladder diagram
  /I---P-------------{mux%1_in[1]}                  |       
     $a1-------------{mux%1_in[2]}                  |       
  T------------------{mux%1_in[3]}                  |       
- R------------------{mux%1_S[0]}                   |       
  [previous_Q]-------{mux%1_S[1]}                   |       
-                                                   |       
                                                    |       
  K-----L---M---/N--------------------+-----/X------+       
                                      |             |       
@@ -35,9 +33,11 @@ Library for parse and simplify ladder diagram
      |               |               |             |       
      |               +-{eq%3_en}     |             |       
  V---+-----------------{eq%3_in[1]}  |             |       
- W---------------------{eq%3_in[2]}  |             |       
-                       {eq%3_eno}----+             |       
-                       {eq%3_out}------------------+       
+                                     |             |       
+ W---+-----------------{eq%3_in[2]}  |             |       
+     |                 {eq%3_eno}----+             |       
+     |                 {eq%3_out}------------------+       
+ R---+--{mux%1_S[0]}                                       
 
 --------- FINAL RESULT ---------
 
@@ -51,6 +51,9 @@ Library for parse and simplify ladder diagram
       INFIX: _N[7] = ($c) | (V) 
     POSTFIX: _N[7] = $c V or 
 
+      INFIX: _N[9] = (W) | (R) 
+    POSTFIX: _N[9] = W R or 
+
 
 [OUT] 
       INFIX: Q = (_N[5]) 
@@ -58,8 +61,8 @@ Library for parse and simplify ladder diagram
 
 
 [FUNCTIONS] 
-         fn: mux%1 (in[0]=(_N[2]), in[1]=(!I & P), in[2]=($a1), in[3]=(T), S[0]=(R), S[1]=([previous_Q]))
-         fn: eq%3 (en=({gt%2_out}), in[1]=(_N[7]), in[2]=(W))
+         fn: mux%1 (in[0]=(_N[2]), in[1]=(!I & P), in[2]=($a1), in[3]=(T), S[1]=([previous_Q]), S[0]=(_N[9]))
+         fn: eq%3 (en=({gt%2_out}), in[1]=(_N[7]), in[2]=(_N[9]))
          fn: gt%2 (in[0]=($b), in[1]=(_N[7]))
 
 --------------------------------
