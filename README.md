@@ -35,7 +35,7 @@ Library for parse and simplify ladder diagram
  V---+-----------------{eq%3_in[1]}  |             |       
                                      |             |       
  W---+-----------------{eq%3_in[2]}  |             |       
-     |                 {eq%3_eno}----+----Z        |       
+     |                 {eq%3_eno}----+----$b       |       
      |                 {eq%3_out}------------------+       
  R---+--{mux%1_S[0]}                                       
 
@@ -62,14 +62,14 @@ Library for parse and simplify ladder diagram
       INFIX: Q = (_N[5] & Y) 
     POSTFIX: Q = _N[5] Y and 
 
-      INFIX: Z = (_N[6]) 
-    POSTFIX: Z = _N[6] 
+      INFIX: $b = (_N[6]) 
+    POSTFIX: $b = _N[6] 
 
 
 [FUNCTIONS] 
-         fn: mux%1 (in[0]=(_N[2]), in[1]=(!I & P), in[2]=($a1), in[3]=(T), S[1]=([previous_Q]), S[0]=(_N[9]))
-         fn: eq%3 (en=({gt%2_out}), in[1]=(_N[7]), in[2]=(_N[9]))
-         fn: gt%2 (in[0]=($b), in[1]=(_N[7]))
+         FN: mux%1 = in[0]::(_N[2]) in[1]::(!I & P) in[2]::($a1) in[3]::(T) S[1]::([previous_Q]) S[0]::(_N[9]) 
+         FN: eq%3 = en::({gt%2_out}) in[1]::(_N[7]) in[2]::(_N[9]) 
+         FN: gt%2 = in[0]::($b) in[1]::(_N[7]) 
 
 --------------------------------
 ```
