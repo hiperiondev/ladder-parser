@@ -20,8 +20,8 @@ Library for parse and simplify ladder diagram
       |                             |              |       
       |            /{mux%1_out}-----+              |       
       +-------------{mux%1_in[0]}                  |       
- /I---P-------------{mux%1_in[1]}                  |       
-    $a1-------------{mux%1_in[2]}                  |       
+ /I---------P-------{mux%1_in[1]}                  |       
+ $a1----------------{mux%1_in[2]}                  |       
  T------------------{mux%1_in[3]}                  |       
  [previous_Q]-------{mux%1_S[1]}                   |       
                                                    |       
