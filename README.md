@@ -6,6 +6,9 @@ Library for parse and simplify ladder diagram
 - cd ladder-parser/build
 - make
 
+#### TODO
+- Evaluation Order
+
 ### EXAMPLE
 ```
 - rung -
