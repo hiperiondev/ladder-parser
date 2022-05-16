@@ -741,9 +741,9 @@ void ladder_separate_functions(cstr *str_in, cstr *str_out, int str_in_qty, int 
 
         sprintf(tmp, "%d", f_in_id[n]);
         cstr_assign(&((*fn)[*fn_qty]), f_in_name[n].str);
-        cstr_append(&((*fn)[*fn_qty]), "[");
+        cstr_append(&((*fn)[*fn_qty]), "%");
         cstr_append(&((*fn)[*fn_qty]), tmp);
-        cstr_append(&((*fn)[*fn_qty]), "](");
+        cstr_append(&((*fn)[*fn_qty]), " (");
 
         for (m = 0; m < f_out_qty; m++) {
             if(f_in_id[n] == f_out_id[m] && cstr_equals_s(f_in_name[n], f_out_name[m])) {

@@ -45,17 +45,16 @@ struct Stack {
 
 static char* infix_to_postfix(const char *inf, size_t len);
 
-void ladder_remove_redundant_parentheses(cstr *expression) {
+bool ladder_remove_redundant_parentheses(cstr *expression) {
     char c[2];
-    cstr result;
+    cstr result = cstr_with_capacity(1);
 
     c[1] = '\0';
-    result = cstr_with_capacity(1);
 
     int n = cstr_length(*expression);
     if (n == 0) {
         printf("err: length 0\n");
-        return;
+        return 0;
     }
 
     bool check[n];
@@ -68,8 +67,8 @@ void ladder_remove_redundant_parentheses(cstr *expression) {
     for (int i = 0; i < n; ++i) {
         if (expression->str[i] == ')') {
             if (iStack_empty(record)) {
-                printf("err: Expression are not valid\n");
-                return;
+                //printf("err: Expression are not valid\n");
+                return 0;
             } else if (expression->str[*iStack_top(&record)] == '(') {
                 check[i] = false;
                 check[*iStack_top(&record)] = false;
@@ -79,8 +78,8 @@ void ladder_remove_redundant_parentheses(cstr *expression) {
                     iStack_pop(&record);
                 }
                 if (iStack_empty(record)) {
-                    printf("err: Expression are not valid\n");
-                    return;
+                    //printf("err: Expression are not valid\n");
+                    return 0;
                 }
                 iStack_pop(&record);
             }
@@ -97,6 +96,8 @@ void ladder_remove_redundant_parentheses(cstr *expression) {
     }
 
     cstr_assign(expression, result.str);
+
+    return 1;
 }
 
 void ladder_to_postfix(cstr *postfix, char *eqn) {
