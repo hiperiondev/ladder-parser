@@ -213,9 +213,7 @@ int main(void) {
     ladder_rung_add_line(&rung, " /I---P-------------{mux%1_in[1]}                  |       ");
     ladder_rung_add_line(&rung, "    $a1-------------{mux%1_in[2]}                  |       ");
     ladder_rung_add_line(&rung, " T------------------{mux%1_in[3]}                  |       ");
-    ladder_rung_add_line(&rung, " R------------------{mux%1_S[0]}                   |       ");
     ladder_rung_add_line(&rung, " [previous_Q]-------{mux%1_S[1]}                   |       ");
-    ladder_rung_add_line(&rung, "                                                   |       ");
     ladder_rung_add_line(&rung, "                                                   |       ");
     ladder_rung_add_line(&rung, " K-----L---M---/N--------------------+-----/X------+       ");
     ladder_rung_add_line(&rung, "                                     |             |       ");
@@ -225,9 +223,12 @@ int main(void) {
     ladder_rung_add_line(&rung, "     |               |               |             |       ");
     ladder_rung_add_line(&rung, "     |               +-{eq%3_en}     |             |       ");
     ladder_rung_add_line(&rung, " V---+-----------------{eq%3_in[1]}  |             |       ");
-    ladder_rung_add_line(&rung, " W---------------------{eq%3_in[2]}  |             |       ");
-    ladder_rung_add_line(&rung, "                       {eq%3_eno}----+             |       ");
-    ladder_rung_add_line(&rung, "                       {eq%3_out}------------------+       ");
+    ladder_rung_add_line(&rung, "                                     |             |       ");
+    ladder_rung_add_line(&rung, " W---+-----------------{eq%3_in[2]}  |             |       ");
+    ladder_rung_add_line(&rung, "     |                 {eq%3_eno}----+             |       ");
+    ladder_rung_add_line(&rung, "     |                 {eq%3_out}------------------+       ");
+    ladder_rung_add_line(&rung, " R---+--{mux%1_S[0]}                                       ");
+
 
     printf("- rung -\n");
     ladder_rung_print(rung);

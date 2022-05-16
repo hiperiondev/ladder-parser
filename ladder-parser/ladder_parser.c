@@ -45,18 +45,19 @@ enum CELL_TYPE {
 };
 
 typedef struct cell {
-    int type;
-    bool neg;
+      int type;
+     bool neg;
     union {
         char *str;
-        int index;
+         int index;
     };
 } cell_t;
 
 void ladder_identify_char(rung_t **rung, cell_t ***lns) {
-    int line, row, char_pos = 0;
+     int line, row, char_pos = 0;
     char c = 0, str[254];
     bool neg = false;
+
     memset(str, 0, sizeof(str));
 
     for (line = 0; line < (*rung)->line_qty; line++) {
@@ -190,7 +191,7 @@ int ladder_unify_nodes(rung_t **rung, cell_t ***lns) {
 }
 
 int ladder_separate_blocks(cell_t ***blocks_tmp, rung_t **rung, int nodes_qty, cell_t ***lns) { // +--[...]--+
-    int line, column, pos, block;
+     int line, column, pos, block;
     bool and;
 
     and = false;
@@ -270,7 +271,7 @@ int ladder_separate_blocks(cell_t ***blocks_tmp, rung_t **rung, int nodes_qty, c
 }
 
 int ladder_allocate_list_blocks(cell_t ***blocks_tmp, rung_t **rung, list_t ***blocks_list, int blocks_qty) {
-    int line, column, block, line_len;
+     int line, column, block, line_len;
     bool has_block = false;
 
     block = 0;
@@ -340,12 +341,13 @@ int ladder_allocate_list_blocks(cell_t ***blocks_tmp, rung_t **rung, list_t ***b
 
 void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cstr **str_in, cstr **str_out, int *str_in_qty, int *str_out_qty, int **str_in_len,
         int **str_out_len) { // join nodes (equal right nodes are OR'ed)
-    int block, node, cnt;
-    bool and, or, has_node;
-    list_node_t *node_list;
+
+                int block, node, cnt;
+               bool and, or, has_node;
+        list_node_t *node_list;
     list_iterator_t *it;
-    cell_t *item;
-    cstr str_tmp;
+             cell_t *item;
+               cstr str_tmp;
 
     has_node = false;
     *str_in_qty = 0;
@@ -511,7 +513,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
 }
 
 void ladder_substitute_nodes(int pos1, int pos2, cstr *str_in, cstr *str_out, int *str_in_len, int *str_out_len, int minimun_len_replace) {
-    int line, column, n;
+     int line, column, n;
     bool neg = false;
     cstr tmp = cstr_with_capacity(1);
     cstr tmp2 = cstr_with_capacity(1);
@@ -596,9 +598,9 @@ uint8_t ladder_find_st_sp(cstr str, cstr *res, char *start, char *end, size_t *p
 }
 
 void ladder_separate_functions(cstr *str_in, cstr *str_out, int str_in_qty, int str_out_qty, cstr **fn, int *fn_qty) {
-    int n, m, pos, inc, f_in_qty = 0, f_out_qty = 0;
+       int n, m, pos, inc, f_in_qty = 0, f_out_qty = 0;
     size_t pos_start = 0, pos_end = 0;
-    char tmp[254];
+      char tmp[254];
 
     *fn_qty = 0;
 
@@ -791,8 +793,8 @@ void ladder_separate_functions(cstr *str_in, cstr *str_out, int str_in_qty, int 
 }
 
 void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *result_out_qty, cstr **fn, int *fn_qty, rung_t **rung) {
-    int n, pos, str_in_qty, str_out_qty, blocks_qty, nodes_qty, *str_in_len, *str_out_len, functions_qty;
-    cstr *str_in, *str_out, *functions;
+       int n, pos, str_in_qty, str_out_qty, blocks_qty, nodes_qty, *str_in_len, *str_out_len, functions_qty;
+      cstr *str_in, *str_out, *functions;
     cell_t **blocks_tmp;
     cell_t **lns;
     list_t **blocks_list;
