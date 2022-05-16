@@ -6,6 +6,10 @@ Library for parse and simplify ladder diagram
 - cd ladder-parser/build
 - make
 
+#### LIMITATIONS
+- An output must be the end of line
+- Others?
+
 #### TODO
 - Evaluation Order
 
