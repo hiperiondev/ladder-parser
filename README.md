@@ -29,7 +29,7 @@ Library for parse and simplify ladder diagram
                                                    |       
  K-----L---M---/N--------------------+-----/X------+       
                                      |             |       
- $b--   {gt%2_in[0]}                 |             |       
+ $b-----{gt%2_in[0]}                 |             |       
  $c--+--{gt%2_in[1]}                 |             |       
      |  {gt%2_out}---+               |             |       
      |               |               |             |       
