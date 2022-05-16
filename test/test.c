@@ -210,8 +210,8 @@ int main(void) {
     ladder_rung_add_line(&rung, "      |                             |              |       ");
     ladder_rung_add_line(&rung, "      |            /{mux%1_out}-----+              |       ");
     ladder_rung_add_line(&rung, "      +-------------{mux%1_in[0]}                  |       ");
-    ladder_rung_add_line(&rung, " /I---P-------------{mux%1_in[1]}                  |       ");
-    ladder_rung_add_line(&rung, "    $a1-------------{mux%1_in[2]}                  |       ");
+    ladder_rung_add_line(&rung, " /I---------P-------{mux%1_in[1]}                  |       ");
+    ladder_rung_add_line(&rung, " $a1----------------{mux%1_in[2]}                  |       ");
     ladder_rung_add_line(&rung, " T------------------{mux%1_in[3]}                  |       ");
     ladder_rung_add_line(&rung, " [previous_Q]-------{mux%1_S[1]}                   |       ");
     ladder_rung_add_line(&rung, "                                                   |       ");
