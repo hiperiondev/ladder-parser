@@ -210,14 +210,15 @@ int main(void) {
     printf("-------------------< TEST 6 >-------------------\n\n");
     ladder_rung_init(&rung);
 
-    ladder_rung_add_line(&rung, " A--+-+------------{ton%4_q}--------+---C---+------+--Y--Q ");
-    ladder_rung_add_line(&rung, "    | |                             |       |      |       ");
-    ladder_rung_add_line(&rung, " D--+ |                             +--/E---+      |       ");
-    ladder_rung_add_line(&rung, "    | |                             |       |      |       ");
-    ladder_rung_add_line(&rung, " F--+ |                             +---G---+      |       ");
-    ladder_rung_add_line(&rung, "      |                             |              |       ");
-    ladder_rung_add_line(&rung, "      |            /{mux%1_out}-----+              |       ");
-    ladder_rung_add_line(&rung, "      +-------------{mux%1_in0}                    |       ");
+    ladder_rung_add_line(&rung, "    +-------------{ton%4_in}                               ");
+    ladder_rung_add_line(&rung, " A--+             {ton%4_q}---------+---C---+------+--Y--Q ");
+    ladder_rung_add_line(&rung, "    |                               |       |      |       ");
+    ladder_rung_add_line(&rung, " D--+                               +--/E---+      |       ");
+    ladder_rung_add_line(&rung, "    |                               |       |      |       ");
+    ladder_rung_add_line(&rung, " F--+                               +---G---+      |       ");
+    ladder_rung_add_line(&rung, "    |                               |              |       ");
+    ladder_rung_add_line(&rung, "    |              /{mux%1_out}-----+              |       ");
+    ladder_rung_add_line(&rung, "    +---------------{mux%1_in0}                    |       ");
     ladder_rung_add_line(&rung, " /I---------P-------{mux%1_in1}                    |       ");
     ladder_rung_add_line(&rung, " $a1----------------{mux%1_in2}                    |       ");
     ladder_rung_add_line(&rung, " T------------------{mux%1_in3}                    |       ");
