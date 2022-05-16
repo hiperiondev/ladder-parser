@@ -33,6 +33,7 @@
 #include "list.h"
 #include "ladder_parser.h"
 #include "rung.h"
+#include "utils.h"
 
 enum CELL_TYPE {
     CELL_NONE,
@@ -44,11 +45,11 @@ enum CELL_TYPE {
 };
 
 typedef struct cell {
-     int type;
+    int type;
     bool neg;
     union {
         char *str;
-         int index;
+        int index;
     };
 } cell_t;
 
@@ -276,7 +277,10 @@ int ladder_allocate_list_blocks(cell_t ***blocks_tmp, rung_t **rung, list_t ***b
     line_len = (*rung)->line_len;
 
     for (line = 0; line < blocks_qty; line++) {
-        (*blocks_list) = realloc((*blocks_list), (block + 1) * sizeof(list_t*));
+        if (!block)
+            (*blocks_list) = malloc(sizeof(list_t*));
+        else
+            (*blocks_list) = realloc((*blocks_list), (block + 1) * sizeof(list_t*));
         (*blocks_list)[block] = list_new();
 
         for (column = 0; column < line_len; column++) {
@@ -334,7 +338,8 @@ int ladder_allocate_list_blocks(cell_t ***blocks_tmp, rung_t **rung, list_t ***b
     return block;
 }
 
-void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cstr **str_in, cstr **str_out, int *str_in_qty, int *str_out_qty, int **str_in_len, int **str_out_len) { // join nodes (equal right nodes are OR'ed)
+void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cstr **str_in, cstr **str_out, int *str_in_qty, int *str_out_qty, int **str_in_len,
+        int **str_out_len) { // join nodes (equal right nodes are OR'ed)
     int block, node, cnt;
     bool and, or, has_node;
     list_node_t *node_list;
@@ -366,7 +371,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
                 }
 
                 if (or) {
-                    cstr_printf(&str_tmp,"|");
+                    cstr_printf(&str_tmp, "|");
                     cstr_append(&((*str_in)[*str_in_qty]), str_tmp.str);
                     cnt++;
                 }
@@ -521,8 +526,7 @@ void ladder_substitute_nodes(int pos1, int pos2, cstr *str_in, cstr *str_out, in
 
         // if used by out not substitute
         for (column = 0; column < pos2; column++) {
-            int find = cstr_find(str_out[column], left.str);
-            if (find != -1 && str_in_len[line] > minimun_len_replace) {
+            if (cstr_find(str_out[column], left.str) != cstr_npos && str_in_len[line] > minimun_len_replace) {
                 cstr_clear(&left);
                 cstr_clear(&right);
                 neg = true;
@@ -544,7 +548,7 @@ void ladder_substitute_nodes(int pos1, int pos2, cstr *str_in, cstr *str_out, in
             if (column == line)
                 continue;
 
-            if ((int)cstr_find(str_in[column], left.str) != -1)
+            if (cstr_find(str_in[column], left.str) != cstr_npos)
                 str_in_len[column] = str_in_len[column] + str_in_len[line] - 1;
 
             cstr_replace_all(&str_in[column], left.str, tmp.str);
@@ -554,7 +558,7 @@ void ladder_substitute_nodes(int pos1, int pos2, cstr *str_in, cstr *str_out, in
             if (column == line)
                 continue;
 
-            if ((int) cstr_find(str_out[column], left.str) != -1)
+            if (cstr_find(str_out[column], left.str) != cstr_npos)
                 str_out_len[column] = str_out_len[column] + str_out_len[line] - 1;
 
             cstr_replace_all(&str_out[column], left.str, tmp.str);
@@ -571,9 +575,224 @@ void ladder_substitute_nodes(int pos1, int pos2, cstr *str_in, cstr *str_out, in
     cstr_drop(&tmp2);
 }
 
-void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *result_out_qty, rung_t **rung) {
-    int n, pos, str_in_qty, str_out_qty, blocks_qty, nodes_qty, *str_in_len, *str_out_len;
-    cstr *str_in, *str_out;
+uint8_t ladder_find_st_sp(cstr str, cstr *res, char *start, char *end, size_t *pos_start, size_t *pos_end) {
+    if(cstr_length(str) == 0)
+        return 0;
+
+    *pos_start = cstr_find_n(str, start, *pos_start, cstr_length(str));
+    if (*pos_start == cstr_npos) {
+        *pos_end = cstr_npos;
+        return 0;
+    }
+
+    *pos_end = cstr_find_n(str, end, *pos_start, cstr_length(str));
+    if (*pos_end == cstr_npos) {
+        return 0;
+    }
+
+    cstr_assign_n(res, str.str + (*pos_start) + 1, (*pos_end) - (*pos_start) - 1);
+
+    return 1;
+}
+
+void ladder_separate_functions(cstr *str_in, cstr *str_out, int str_in_qty, int str_out_qty, cstr **fn, int *fn_qty) {
+    int n, m, pos, inc, f_in_qty = 0, f_out_qty = 0;
+    size_t pos_start = 0, pos_end = 0;
+    char tmp[254];
+
+    *fn_qty = 0;
+
+     int *f_in_id = malloc(sizeof(int));
+    cstr *f_in_name = malloc(sizeof(cstr*));
+    cstr *f_in_pin = malloc(sizeof(cstr*));
+
+     int *f_out_id = malloc(sizeof(int));
+    cstr *f_out_name = malloc(sizeof(cstr*));
+    cstr *f_out_pin = malloc(sizeof(cstr*));
+    cstr *f_out_arg = malloc(sizeof(cstr*));
+
+    *fn = malloc(sizeof(cstr*));
+
+    cstr res = cstr_with_capacity(1);
+
+    // functions in
+    for (n = 0; n < str_in_qty; n++) {
+        while (ladder_find_st_sp(str_in[n], &res, "{", "}", &pos_start, &pos_end)) {
+            if (f_in_qty) {
+                f_in_name = realloc(f_in_name, (f_in_qty + 1) * sizeof(cstr*));
+                f_in_pin = realloc(f_in_pin, (f_in_qty + 1) * sizeof(cstr*));
+                f_in_id = realloc(f_in_id, (f_in_qty + 1) * sizeof(int));
+            }
+
+            f_in_name[f_in_qty] = cstr_with_capacity(1);
+            f_in_pin[f_in_qty] = cstr_with_capacity(1);
+
+            pos = cstr_find(res, "_");
+            cstr_assign(&(f_in_pin[f_in_qty]), res.str + pos + 1);
+            cstr_assign_n(&res, res.str, pos);
+            pos = cstr_find(res, "%");
+            cstr_assign_n(&f_in_name[f_in_qty], res.str, pos);
+            f_in_id[f_in_qty] = atoi(res.str + pos + 1);
+
+            pos_start = pos_end;
+
+            inc = 1;
+            for (m = 0; m < f_in_qty; m++)
+                if (cstr_equals_s(f_in_pin[f_in_qty], f_in_pin[m]) && cstr_equals_s(f_in_name[f_in_qty], f_in_name[m]) && (f_in_id[f_in_qty] == f_in_id[m])) {
+                    inc = 0;
+                    break;
+                }
+#ifdef LADDER_DEBUG
+            if (inc)
+                printf("f_in: %s(%i)::%s\n", f_in_name[f_in_qty].str, f_in_id[f_in_qty], f_in_pin[f_in_qty].str);
+#endif
+            f_in_qty += inc;
+
+        }
+        pos_start = 0;
+        pos_end = 0;
+    }
+
+    // functions as result in out
+    for (n = 0; n < str_out_qty; n++) {
+        pos = cstr_find(str_out[n], "=");
+        cstr_assign(&res, str_out[n].str + pos + 1);
+
+        while (ladder_find_st_sp(res, &res, "{", "}", &pos_start, &pos_end)) {
+            if (f_in_qty) {
+                f_in_name = realloc(f_in_name, (f_in_qty + 1) * sizeof(cstr*));
+                f_in_pin = realloc(f_in_pin, (f_in_qty + 1) * sizeof(cstr*));
+                f_in_id = realloc(f_in_id, (f_in_qty + 1) * sizeof(int));
+            }
+
+            f_in_name[f_in_qty] = cstr_with_capacity(1);
+            f_in_pin[f_in_qty] = cstr_with_capacity(1);
+
+            pos = cstr_find(res, "_");
+            cstr_assign(&(f_in_pin[f_in_qty]), res.str + pos + 1);
+            cstr_assign_n(&res, res.str, pos);
+            pos = cstr_find(res, "%");
+            cstr_assign_n(&f_in_name[f_in_qty], res.str, pos);
+            f_in_id[f_in_qty] = atoi(res.str + pos + 1);
+
+            pos_start = pos_end;
+
+            inc = 1;
+            for (m = 0; m < f_in_qty; m++)
+                if (cstr_equals_s(f_in_pin[f_in_qty], f_in_pin[m]) && cstr_equals_s(f_in_name[f_in_qty], f_in_name[m]) && (f_in_id[f_in_qty] == f_in_id[m])) {
+                    inc = 0;
+                    break;
+                }
+#ifdef LADDER_DEBUG
+            if (inc)
+                printf("f_in: %s(%i)::%s\n", f_in_name[f_in_qty].str, f_in_id[f_in_qty], f_in_pin[f_in_qty].str);
+#endif
+            f_in_qty += inc;
+
+        }
+        pos_start = 0;
+        pos_end = 0;
+    }
+
+    // functions out
+    for (n = 0; n < str_out_qty; n++) {
+        if (ladder_find_st_sp(str_out[n], &res, "{", "}", &pos_start, &pos_end)) {
+
+            if (f_out_qty) {
+                f_out_name = realloc(f_out_name, (f_out_qty + 1) * sizeof(cstr*));
+                f_out_pin = realloc(f_out_pin, (f_out_qty + 1) * sizeof(cstr*));
+                f_out_id = realloc(f_out_id, (f_out_qty + 1) * sizeof(int));
+                f_out_arg = realloc(f_out_arg, (f_out_qty + 1) * sizeof(cstr*));
+            }
+            f_out_name[f_out_qty] = cstr_with_capacity(1);
+            f_out_pin[f_out_qty] = cstr_with_capacity(1);
+            f_out_arg[f_out_qty] = cstr_with_capacity(1);
+
+            pos = cstr_find(str_out[n], "=");
+            cstr_assign(&(f_out_arg[f_out_qty]), str_out[n].str + pos + 1);
+
+            pos = cstr_find(res, "_");
+            cstr_assign(&(f_out_pin[f_out_qty]), res.str + pos + 1);
+            cstr_assign_n(&res, res.str, pos);
+
+            pos = cstr_find(res, "%");
+            cstr_assign_n(&f_out_name[f_out_qty], res.str, pos);
+            f_out_id[f_out_qty] = atoi(res.str + pos + 1);
+            cstr_clear(&(str_out[n]));
+
+#ifdef LADDER_DEBUG
+            if (inc)
+                printf("f_out: %s(%i)::%s = %s\n", f_out_name[f_out_qty].str, f_out_id[f_out_qty], f_out_pin[f_out_qty].str, f_out_arg[f_out_qty].str);
+#endif
+            ++f_out_qty;
+            pos_start = pos_end;
+        }
+
+        pos_start = 0;
+        pos_end = 0;
+    }
+
+
+    for (n = 0; n < f_in_qty; n++) {
+        if (*fn_qty) {
+            *fn = realloc((*fn), (*fn_qty + 1) * sizeof(cstr*));
+            (*fn)[*fn_qty] = cstr_with_capacity(1);
+        }
+
+        sprintf(tmp, "%d", f_in_id[n]);
+        cstr_assign(&((*fn)[*fn_qty]), f_in_name[n].str);
+        cstr_append(&((*fn)[*fn_qty]), "[");
+        cstr_append(&((*fn)[*fn_qty]), tmp);
+        cstr_append(&((*fn)[*fn_qty]), "](");
+
+        for (m = 0; m < f_out_qty; m++) {
+            if(f_in_id[n] == f_out_id[m] && cstr_equals_s(f_in_name[n], f_out_name[m])) {
+                cstr_append(&((*fn)[*fn_qty]), f_out_pin[m].str);
+                cstr_append(&((*fn)[*fn_qty]), "=");
+                ladder_remove_redundant_parentheses(&f_out_arg[m]);
+                cstr_append(&((*fn)[*fn_qty]), f_out_arg[m].str);
+                cstr_append(&((*fn)[*fn_qty]), ", ");
+
+
+            }
+        }
+        cstr_append(&((*fn)[*fn_qty]), ")");
+        cstr_replace_all(&((*fn)[n]), " , )", ")");
+        cstr_replace_all(&((*fn)[n]), "= ", "=");
+        cstr_replace_all(&((*fn)[n]), " , ", ", ");
+        ++(*fn_qty);
+    }
+
+    if (f_in_qty > 0) {
+        for (n = 0; n < *fn_qty; n++) {
+            for (m = n + 1; m < *fn_qty; m++) {
+                if (cstr_equals_s((*fn)[n], (*fn)[m]))
+                    cstr_clear(&(*fn)[m]);
+            }
+
+#ifdef LADDER_DEBUG
+            printf("fn: %s\n", (*fn)[n].str);
+#endif
+        }
+    }
+
+    for (n = 0; n < f_in_qty; n++) {
+        cstr_drop(&f_in_name[n]);
+        cstr_drop(&f_in_pin[n]);
+    }
+    for (n = 0; n < f_out_qty; n++) {
+        cstr_drop(&f_out_name[n]);
+        cstr_drop(&f_out_pin[n]);
+        cstr_drop(&f_out_arg[n]);
+    }
+    cstr_drop(&res);
+    free(f_in_id);
+    free(f_out_id);
+}
+
+void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *result_out_qty, cstr **fn, int *fn_qty, rung_t **rung) {
+    int n, pos, str_in_qty, str_out_qty, blocks_qty, nodes_qty, *str_in_len, *str_out_len, functions_qty;
+    cstr *str_in, *str_out, *functions;
     cell_t **blocks_tmp;
     cell_t **lns;
     list_t **blocks_list;
@@ -585,7 +804,6 @@ void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *
     ladder_identify_char(rung, &lns);
     nodes_qty = ladder_unify_nodes(rung, &lns);
     blocks_qty = ladder_separate_blocks(&blocks_tmp, rung, nodes_qty, &lns);
-
     for (n = 0; n < (*rung)->line_qty; n++)
         free(lns[n]);
     free(lns);
@@ -627,9 +845,13 @@ void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *
             cstr_erase(&str_out[n], pos);
     }
 
+    ladder_separate_functions(str_in, str_out, str_in_qty, str_out_qty, &functions, &functions_qty);
+
     // final result
     *result_in = str_in;
     *result_out = str_out;
     *result_in_qty = str_in_qty;
     *result_out_qty = str_out_qty;
+    *fn = functions;
+    *fn_qty = functions_qty;
 }

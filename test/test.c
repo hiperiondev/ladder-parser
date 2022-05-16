@@ -32,12 +32,13 @@
 #include "utils.h"
 #include "ladder_parser.h"
 
-void print_result(cstr *result_in, cstr *result_out, int result_in_qty, int result_out_qty) {
+void print_result(cstr *result_in, cstr *result_out, int result_in_qty, int result_out_qty, cstr *fn, int fn_qty) {
     int n;
     cstr postfix;
 
     printf("\n--------- FINAL RESULT ---------\n\n");
-    printf("[IN]: \n");
+
+    printf("[IN] \n");
     for (n = 0; n < result_in_qty; n++) {
         if (cstr_size(result_in[n]) > 0) {
             ladder_remove_redundant_parentheses(&result_in[n]);
@@ -49,7 +50,8 @@ void print_result(cstr *result_in, cstr *result_out, int result_in_qty, int resu
             cstr_drop(&postfix);
         }
     }
-    printf("\n[OUT]: \n");
+
+    printf("\n[OUT] \n");
     for (n = 0; n < result_out_qty; n++) {
         if (cstr_size(result_out[n]) > 0) {
             ladder_remove_redundant_parentheses(&result_out[n]);
@@ -61,12 +63,19 @@ void print_result(cstr *result_in, cstr *result_out, int result_in_qty, int resu
             cstr_drop(&postfix);
         }
     }
-    printf("--------------------------------\n\n");
+    printf("\n[FUNCTIONS] \n");
+    for (n = 0; n < fn_qty; n++) {
+        if (cstr_size(fn[n]) > 0) {
+            printf("         fn: %s\n", fn[n].str);
+        }
+    }
+
+    printf("\n--------------------------------\n\n");
 }
 
 int main(void) {
-    cstr *result_in, *result_out;
-    int result_in_qty, result_out_qty;
+    cstr *result_in, *result_out, *fn;
+    int result_in_qty, result_out_qty, fn_qty;
     rung_t *rung;
 
     printf("-----------------< TEST 1 >----------------\n\n");
@@ -83,8 +92,8 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty);
+    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
+    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
     cstr_drop(result_in);
@@ -105,8 +114,8 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty);
+    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
+    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
     cstr_drop(result_in);
@@ -129,8 +138,8 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty);
+    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
+    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
     cstr_drop(result_in);
@@ -153,8 +162,8 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty);
+    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
+    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
     cstr_drop(result_in);
@@ -165,24 +174,24 @@ int main(void) {
     printf("-------------------< TEST 5 >-------------------\n\n");
     ladder_rung_init(&rung);
 
-    ladder_rung_add_line(&rung, " A--+-+-/B-------------+---C---+---+-----Q ");
-    ladder_rung_add_line(&rung, "    | |                |       |   |       ");
-    ladder_rung_add_line(&rung, " D--+ |                +--/E---+   |       ");
-    ladder_rung_add_line(&rung, "    | |                |       |   |       ");
-    ladder_rung_add_line(&rung, " F--+ |                +---G---+   |       ");
-    ladder_rung_add_line(&rung, "      |                |           |       ");
-    ladder_rung_add_line(&rung, "      |   Func_out[1]--+           |       ");
-    ladder_rung_add_line(&rung, "      |  /Func_out[2]--------------+       ");
-    ladder_rung_add_line(&rung, "      +---Func_in[1]               |       ");
-    ladder_rung_add_line(&rung, " /I---P---Func_in[2]               |       ");
-    ladder_rung_add_line(&rung, " J--------Func_in[3]               |       ");
-    ladder_rung_add_line(&rung, "                                   |       ");
-    ladder_rung_add_line(&rung, " K----L----M---/N------------------+       ");
+    ladder_rung_add_line(&rung, " A--+-+-/B-----------------+---C---+---+-----Q ");
+    ladder_rung_add_line(&rung, "    | |                    |       |   |       ");
+    ladder_rung_add_line(&rung, " D--+ |                    +--/E---+   |       ");
+    ladder_rung_add_line(&rung, "    | |                    |       |   |       ");
+    ladder_rung_add_line(&rung, " F--+ |                    +---G---+   |       ");
+    ladder_rung_add_line(&rung, "      |                    |           |       ");
+    ladder_rung_add_line(&rung, "      |   {Func%1_out[1]}--+           |       ");
+    ladder_rung_add_line(&rung, "      |  /{Func%1_out[2]}--------------+       ");
+    ladder_rung_add_line(&rung, "      +---{Func%1_in[1]}               |       ");
+    ladder_rung_add_line(&rung, " /I---P---{Func%1_in[2]}               |       ");
+    ladder_rung_add_line(&rung, " J--------{Func%1_in[3]}               |       ");
+    ladder_rung_add_line(&rung, "                                       |       ");
+    ladder_rung_add_line(&rung, " K----L----M---/N----------------------+       ");
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty);
+    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
+    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
     cstr_drop(result_in);
@@ -193,7 +202,7 @@ int main(void) {
     printf("-------------------< TEST 6 >-------------------\n\n");
     ladder_rung_init(&rung);
 
-    ladder_rung_add_line(&rung, " A--+-+-/B--------------------------+---C---+---+-----Q ");
+    ladder_rung_add_line(&rung, " A--+-+--------------/B-------------+---C---+---+-----Q ");
     ladder_rung_add_line(&rung, "    | |                             |       |   |       ");
     ladder_rung_add_line(&rung, " D--+ |                             +--/E---+   |       ");
     ladder_rung_add_line(&rung, "    | |                             |       |   |       ");
@@ -207,22 +216,23 @@ int main(void) {
     ladder_rung_add_line(&rung, " R------------------{mux%1_S[0]}                |       ");
     ladder_rung_add_line(&rung, " [previous_Q]-------{mux%1_S[1]}                |       ");
     ladder_rung_add_line(&rung, "                                                |       ");
-    ladder_rung_add_line(&rung, "     $b--{gt%2_in[0]}                           |       ");
-    ladder_rung_add_line(&rung, "     $c--{gt%2_in[1]}                           |       ");
-    ladder_rung_add_line(&rung, "         {gt%2_out}-----------------------------+       ");
     ladder_rung_add_line(&rung, "                                                |       ");
-    ladder_rung_add_line(&rung, " K--+--L---M---/N-------------------------------+       ");
-    ladder_rung_add_line(&rung, "    |                                           |       ");
-    ladder_rung_add_line(&rung, "    +--{eq%3_en}                                |       ");
-    ladder_rung_add_line(&rung, "    V--{eq%3_in[1]}                             |       ");
-    ladder_rung_add_line(&rung, "    W--{eq%3_in[2]}                             |       ");
-    ladder_rung_add_line(&rung, "       {eq%3_eno}                               |       ");
-    ladder_rung_add_line(&rung, "       {eq%3_out}-------------------------------+       ");
+    ladder_rung_add_line(&rung, " K-----L---M---/N-----------------+-----/X------+       ");
+    ladder_rung_add_line(&rung, "                                  |             |       ");
+    ladder_rung_add_line(&rung, " $b--{gt%2_in[0]}                 |             |       ");
+    ladder_rung_add_line(&rung, " $c--{gt%2_in[1]}                 |             |       ");
+    ladder_rung_add_line(&rung, "     {gt%2_out}---+               |             |       ");
+    ladder_rung_add_line(&rung, "                  |               |             |       ");
+    ladder_rung_add_line(&rung, "                  +-{eq%3_en}     |             |       ");
+    ladder_rung_add_line(&rung, " V------------------{eq%3_in[1]}  |             |       ");
+    ladder_rung_add_line(&rung, " W------------------{eq%3_in[2]}  |             |       ");
+    ladder_rung_add_line(&rung, "                    {eq%3_eno}----+             |       ");
+    ladder_rung_add_line(&rung, "                    {eq%3_out}------------------+       ");
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty);
+    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
+    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
     cstr_drop(result_in);
