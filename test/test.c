@@ -210,33 +210,34 @@ int main(void) {
     printf("-------------------< TEST 6 >-------------------\n\n");
     ladder_rung_init(&rung);
 
-    ladder_rung_add_line(&rung, " A--+-+--------------/B-------------+---C---+------+--Y--Q ");
+    ladder_rung_add_line(&rung, " A--+-+------------{ton%4_q}--------+---C---+------+--Y--Q ");
     ladder_rung_add_line(&rung, "    | |                             |       |      |       ");
     ladder_rung_add_line(&rung, " D--+ |                             +--/E---+      |       ");
     ladder_rung_add_line(&rung, "    | |                             |       |      |       ");
     ladder_rung_add_line(&rung, " F--+ |                             +---G---+      |       ");
     ladder_rung_add_line(&rung, "      |                             |              |       ");
     ladder_rung_add_line(&rung, "      |            /{mux%1_out}-----+              |       ");
-    ladder_rung_add_line(&rung, "      +-------------{mux%1_in[0]}                  |       ");
-    ladder_rung_add_line(&rung, " /I---------P-------{mux%1_in[1]}                  |       ");
-    ladder_rung_add_line(&rung, " $a1----------------{mux%1_in[2]}                  |       ");
-    ladder_rung_add_line(&rung, " T------------------{mux%1_in[3]}                  |       ");
-    ladder_rung_add_line(&rung, " [previous_Q]-------{mux%1_S[1]}                   |       ");
+    ladder_rung_add_line(&rung, "      +-------------{mux%1_in0}                    |       ");
+    ladder_rung_add_line(&rung, " /I---------P-------{mux%1_in1}                    |       ");
+    ladder_rung_add_line(&rung, " $a1----------------{mux%1_in2}                    |       ");
+    ladder_rung_add_line(&rung, " T------------------{mux%1_in3}                    |       ");
+    ladder_rung_add_line(&rung, " _Q-----------------{mux%1_S1}                     |       ");
     ladder_rung_add_line(&rung, "                                                   |       ");
     ladder_rung_add_line(&rung, " K-----L---M---/N--------------------+-----/X------+       ");
     ladder_rung_add_line(&rung, "                                     |             |       ");
-    ladder_rung_add_line(&rung, " $b-----{gt%2_in[0]}                 |             |       ");
-    ladder_rung_add_line(&rung, " $c--+--{gt%2_in[1]}                 |             |       ");
+    ladder_rung_add_line(&rung, " $b-----{gt%2_in0}                   |             |       ");
+    ladder_rung_add_line(&rung, " $c--+--{gt%2_in1}                   |             |       ");
     ladder_rung_add_line(&rung, "     |  {gt%2_out}---+               |             |       ");
     ladder_rung_add_line(&rung, "     |               |               |             |       ");
     ladder_rung_add_line(&rung, "     |               +-{eq%3_en}     |             |       ");
-    ladder_rung_add_line(&rung, " V---+-----------------{eq%3_in[1]}  |             |       ");
+    ladder_rung_add_line(&rung, " V---+-----------------{eq%3_in1}    |             |       ");
     ladder_rung_add_line(&rung, "                                     |             |       ");
-    ladder_rung_add_line(&rung, " W---+-----------------{eq%3_in[2]}  |             |       ");
+    ladder_rung_add_line(&rung, " W---+-----------------{eq%3_in2}    |             |       ");
     ladder_rung_add_line(&rung, "     |                 {eq%3_eno}----+----$b       |       ");
     ladder_rung_add_line(&rung, "     |                 {eq%3_out}------------------+       ");
-    ladder_rung_add_line(&rung, " R---+--{mux%1_S[0]}                                       ");
-
+    ladder_rung_add_line(&rung, " R---+--{mux%1_S0}                                         ");
+    ladder_rung_add_line(&rung, "                                                           ");
+    ladder_rung_add_line(&rung, " [10ms]--{ton%4_pt}                                        ");
 
     printf("- rung -\n");
     ladder_rung_print(rung);

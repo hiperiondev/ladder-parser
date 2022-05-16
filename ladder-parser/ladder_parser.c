@@ -368,7 +368,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
             if (item->type == CELL_NODE && item->index == node) {
 
                 if (!has_node) {
-                    cstr_printf(&str_tmp, "_N[%d] =", node);
+                    cstr_printf(&str_tmp, "_N_%d =", node);
                     cstr_append(&((*str_in)[*str_in_qty]), str_tmp.str);
                 }
 
@@ -399,7 +399,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
                     item = node_list->val;
 
                     if (item->type == CELL_NODE) {
-                        cstr_printf(&str_tmp, "_N[%d]", item->index);
+                        cstr_printf(&str_tmp, "_N_%d", item->index);
                         cstr_append(&((*str_in)[*str_in_qty]), str_tmp.str);
                     }
 
@@ -472,7 +472,7 @@ void ladder_join_nodes(list_t ***blocks_list, int nodes_qty, int blocks_qty, cst
 
                 item = node_list->val;
                 if (item->type == CELL_NODE) {
-                    cstr_printf(&str_tmp, "_N[%d]", item->index);
+                    cstr_printf(&str_tmp, "_N_%d", item->index);
                     cstr_append(&((*str_out)[*str_out_qty]), str_tmp.str);
                 }
 
@@ -753,16 +753,15 @@ void ladder_separate_functions(cstr *str_in, cstr *str_out, int str_in_qty, int 
                 cstr_append(&((*fn)[*fn_qty]), "::");
                 ladder_remove_redundant_parentheses(&f_out_arg[m]);
                 cstr_append(&((*fn)[*fn_qty]), f_out_arg[m].str);
-                //cstr_append(&((*fn)[*fn_qty]), ", ");
 
 
             }
         }
-        //cstr_append(&((*fn)[*fn_qty]), ")");
-       // cstr_replace_all(&((*fn)[n]), " , )", ")");
+
         cstr_replace_all(&((*fn)[n]), "= ", "=");
         cstr_replace_all(&((*fn)[n]), " , ", ", ");
         cstr_replace_all(&((*fn)[n]), ":: ", "::");
+
         ++(*fn_qty);
     }
 
