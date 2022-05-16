@@ -210,7 +210,7 @@ int main(void) {
     printf("-------------------< TEST 6 >-------------------\n\n");
     ladder_rung_init(&rung);
 
-    ladder_rung_add_line(&rung, " A--+-+--------------/B-------------+---C---+------+-----Q ");
+    ladder_rung_add_line(&rung, " A--+-+--------------/B-------------+---C---+------+--Y--Q ");
     ladder_rung_add_line(&rung, "    | |                             |       |      |       ");
     ladder_rung_add_line(&rung, " D--+ |                             +--/E---+      |       ");
     ladder_rung_add_line(&rung, "    | |                             |       |      |       ");
