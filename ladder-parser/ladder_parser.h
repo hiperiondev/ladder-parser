@@ -32,6 +32,6 @@
 
 //#define LADDER_DEBUG
 
-void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *result_out_qty, cstr **fn, int *fn_qty, rung_t **rung);
+void ladder_parse(cstr **in, cstr **out, int *in_qty, int *out_qty, cstr **fn, int *fn_qty, rung_t **rung);
 
 #endif /* LADDER_PARSER_H_ */
