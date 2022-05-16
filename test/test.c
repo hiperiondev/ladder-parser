@@ -73,9 +73,22 @@ void print_result(cstr *result_in, cstr *result_out, int result_in_qty, int resu
     printf("\n--------------------------------\n\n");
 }
 
+void free_results(cstr **in, cstr **out, cstr **fn, int in_qty, int out_qty, int fn_qty) {
+    int n;
+
+    for (n = 0; n < in_qty; n++)
+        cstr_drop(&(*in)[n]);
+
+    for (n = 0; n < out_qty; n++)
+            cstr_drop(&(*out)[n]);
+
+    for (n = 0; n < fn_qty; n++)
+            cstr_drop(&(*fn)[n]);
+}
+
 int main(void) {
-    cstr *result_in, *result_out, *fn;
-    int result_in_qty, result_out_qty, fn_qty;
+    cstr *in, *out, *fn;
+    int in_qty, out_qty, fn_qty;
     rung_t *rung;
 
     printf("-----------------< TEST 1 >----------------\n\n");
@@ -92,12 +105,11 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
+    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
+    print_result(in, out, in_qty, out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
-    cstr_drop(result_in);
-    cstr_drop(result_out);
+    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
 
     /////////////////////////
 
@@ -114,12 +126,11 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
+    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
+    print_result(in, out, in_qty, out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
-    cstr_drop(result_in);
-    cstr_drop(result_out);
+    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
 
     /////////////////////////
 
@@ -138,12 +149,11 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
+    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
+    print_result(in, out, in_qty, out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
-    cstr_drop(result_in);
-    cstr_drop(result_out);
+    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
 
     /////////////////////////
 
@@ -162,12 +172,11 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
+    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
+    print_result(in, out, in_qty, out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
-    cstr_drop(result_in);
-    cstr_drop(result_out);
+    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
 
     /////////////////////////
 
@@ -190,12 +199,11 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
+    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
+    print_result(in, out, in_qty, out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
-    cstr_drop(result_in);
-    cstr_drop(result_out);
+    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
 
     /////////////////////////
 
@@ -232,12 +240,11 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&result_in, &result_out, &result_in_qty, &result_out_qty, &fn, &fn_qty, &rung);
-    print_result(result_in, result_out, result_in_qty, result_out_qty, fn, fn_qty);
+    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
+    print_result(in, out, in_qty, out_qty, fn, fn_qty);
 
     ladder_rung_destroy(&rung);
-    cstr_drop(result_in);
-    cstr_drop(result_out);
+    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
 
     return EXIT_SUCCESS;
 }

@@ -792,7 +792,7 @@ void ladder_separate_functions(cstr *str_in, cstr *str_out, int str_in_qty, int 
     free(f_out_id);
 }
 
-void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *result_out_qty, cstr **fn, int *fn_qty, rung_t **rung) {
+void ladder_parse(cstr **in, cstr **out, int *in_qty, int *out_qty, cstr **fn, int *fn_qty, rung_t **rung) {
        int n, pos, str_in_qty, str_out_qty, blocks_qty, nodes_qty, *str_in_len, *str_out_len, functions_qty;
       cstr *str_in, *str_out, *functions;
     cell_t **blocks_tmp;
@@ -850,10 +850,10 @@ void ladder_parse(cstr **result_in, cstr **result_out, int *result_in_qty, int *
     ladder_separate_functions(str_in, str_out, str_in_qty, str_out_qty, &functions, &functions_qty);
 
     // final result
-    *result_in = str_in;
-    *result_out = str_out;
-    *result_in_qty = str_in_qty;
-    *result_out_qty = str_out_qty;
+    *in = str_in;
+    *out = str_out;
+    *in_qty = str_in_qty;
+    *out_qty = str_out_qty;
     *fn = functions;
     *fn_qty = functions_qty;
 }
