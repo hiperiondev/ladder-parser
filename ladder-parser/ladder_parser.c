@@ -745,23 +745,24 @@ void ladder_separate_functions(cstr *str_in, cstr *str_out, int str_in_qty, int 
         cstr_assign(&((*fn)[*fn_qty]), f_in_name[n].str);
         cstr_append(&((*fn)[*fn_qty]), "%");
         cstr_append(&((*fn)[*fn_qty]), tmp);
-        cstr_append(&((*fn)[*fn_qty]), " (");
+        cstr_append(&((*fn)[*fn_qty]), " =  ");
 
         for (m = 0; m < f_out_qty; m++) {
             if(f_in_id[n] == f_out_id[m] && cstr_equals_s(f_in_name[n], f_out_name[m])) {
                 cstr_append(&((*fn)[*fn_qty]), f_out_pin[m].str);
-                cstr_append(&((*fn)[*fn_qty]), "=");
+                cstr_append(&((*fn)[*fn_qty]), "::");
                 ladder_remove_redundant_parentheses(&f_out_arg[m]);
                 cstr_append(&((*fn)[*fn_qty]), f_out_arg[m].str);
-                cstr_append(&((*fn)[*fn_qty]), ", ");
+                //cstr_append(&((*fn)[*fn_qty]), ", ");
 
 
             }
         }
-        cstr_append(&((*fn)[*fn_qty]), ")");
-        cstr_replace_all(&((*fn)[n]), " , )", ")");
+        //cstr_append(&((*fn)[*fn_qty]), ")");
+       // cstr_replace_all(&((*fn)[n]), " , )", ")");
         cstr_replace_all(&((*fn)[n]), "= ", "=");
         cstr_replace_all(&((*fn)[n]), " , ", ", ");
+        cstr_replace_all(&((*fn)[n]), ":: ", "::");
         ++(*fn_qty);
     }
 
@@ -790,6 +791,11 @@ void ladder_separate_functions(cstr *str_in, cstr *str_out, int str_in_qty, int 
     cstr_drop(&res);
     free(f_in_id);
     free(f_out_id);
+}
+
+void ladder_order_eval(cstr **in, cstr **out, int *in_qty, int *out_qty, cstr **fn, int *fn_qty, cstr **ret) {
+
+
 }
 
 void ladder_parse(cstr **in, cstr **out, int *in_qty, int *out_qty, cstr **fn, int *fn_qty, rung_t **rung) {
@@ -856,4 +862,6 @@ void ladder_parse(cstr **in, cstr **out, int *in_qty, int *out_qty, cstr **fn, i
     *out_qty = str_out_qty;
     *fn = functions;
     *fn_qty = functions_qty;
+
+
 }
