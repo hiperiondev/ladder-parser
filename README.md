@@ -7,7 +7,7 @@ Library for parse and simplify ladder diagram
 - make
 
 #### LIMITATIONS
-- An output must be the end of line
+- An output must be the end of line or have only ORs
 - Others?
 
 #### TODO
