@@ -68,12 +68,13 @@ void ladder_print_results (ladder_result_t* result, int result_qty) {
 }
 
 bool ladder_remove_redundant_parentheses(cstr *expression) {
+    int n, i, j;
     char c[2];
     cstr result = cstr_with_capacity(1);
 
     c[1] = '\0';
 
-    int n = cstr_length(*expression);
+    n = cstr_length(*expression);
     if (n == 0) {
         printf("err: length 0\n");
         return 0;
@@ -86,7 +87,7 @@ bool ladder_remove_redundant_parentheses(cstr *expression) {
 
     iStack record = iStack_init();
 
-    for (int i = 0; i < n; ++i) {
+    for (i = 0; i < n; ++i) {
         if (expression->str[i] == ')') {
             if (iStack_empty(record)) {
                 //printf("err: Expression are not valid\n");
@@ -110,10 +111,25 @@ bool ladder_remove_redundant_parentheses(cstr *expression) {
         }
     }
 
-    for (int j = 0; j < n; ++j) {
+    for (j = 0; j < n; ++j) {
         if (check[j]) {
             c[0] = expression->str[j];
             cstr_append(&result, c);
+        }
+    }
+
+    j = -1;
+    for (n = 0; n < cstr_length(result); n++) {
+        if (result.str[n] == '|' || result.str[n] == '&')
+            j = -1;
+
+        if (result.str[n] == '(')
+            j = n;
+
+        if (result.str[n] == ')' && j != -1) {
+            cstr_erase(&result, n);
+            cstr_erase(&result, j);
+            j = -1;
         }
     }
 

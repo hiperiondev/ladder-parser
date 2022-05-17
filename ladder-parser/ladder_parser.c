@@ -751,16 +751,9 @@ void ladder_separate_functions(cstr *str_in, cstr *str_out, int str_in_qty, int 
             if(f_in_id[n] == f_out_id[m] && cstr_equals_s(f_in_name[n], f_out_name[m])) {
                 cstr_append(&((*fn)[*fn_qty]), f_out_pin[m].str);
                 cstr_append(&((*fn)[*fn_qty]), "::");
-                ladder_remove_redundant_parentheses(&f_out_arg[m]);
                 cstr_append(&((*fn)[*fn_qty]), f_out_arg[m].str);
-
-
             }
         }
-
-        cstr_replace_all(&((*fn)[n]), "= ", "=");
-        cstr_replace_all(&((*fn)[n]), " , ", ", ");
-        cstr_replace_all(&((*fn)[n]), ":: ", "::");
 
         ++(*fn_qty);
     }
@@ -823,6 +816,19 @@ void ladder_order_eval(ladder_result_t **result, int result_qty) {
     }
     cstr_drop(&name_next);
     cstr_drop(&value);
+}
+
+void ladder_correct_result(ladder_result_t **result, int result_qty) {
+    cstr text = cstr_with_capacity(1);
+    for (int n = 0; n < result_qty; n++) {
+        cstr_assign(&text, (*result)[n].value);
+        cstr_replace_all(&text, ":: ", "::");
+        if (text.str[0] == ' ')
+            cstr_erase(&text, 0);
+        memset((*result)[n].value, 0, strlen((*result)[n].value));
+        memcpy((*result)[n].value, text.str, cstr_length(text));
+    }
+
 }
 
 void ladder_parse(cstr **in, cstr **out, int *in_qty, int *out_qty, cstr **fn, int *fn_qty, rung_t **rung) {
@@ -908,6 +914,7 @@ ladder_result_t* ladder(rung_t **rung, int *result_qty) {
             pos = cstr_find(in[n], "=");
             cstr_assign_n(&left, in[n].str, pos - 1);
             cstr_assign(&right, in[n].str + pos + 2);
+            ladder_remove_redundant_parentheses(&right);
             result[cnt].name = calloc(cstr_length(left) + 1, sizeof(char));
             result[cnt].value = calloc(cstr_length(right) + 1, sizeof(char));
             memcpy(result[cnt].name, left.str, cstr_length(left));
@@ -925,6 +932,7 @@ ladder_result_t* ladder(rung_t **rung, int *result_qty) {
             cstr_assign(&right, out[n].str + pos + 2);
             result[cnt].name = calloc(cstr_length(left) + 1, sizeof(char));
             result[cnt].value = calloc(cstr_length(right) + 1, sizeof(char));
+            ladder_remove_redundant_parentheses(&right);
             memcpy(result[cnt].name, left.str, cstr_length(left));
             memcpy(result[cnt].value, right.str, cstr_length(right));
             ++cnt;
@@ -940,6 +948,7 @@ ladder_result_t* ladder(rung_t **rung, int *result_qty) {
             cstr_assign(&right, fn[n].str + pos + 2);
             result[cnt].name = calloc(cstr_length(left) + 1, sizeof(char));
             result[cnt].value = calloc(cstr_length(right) + 1, sizeof(char));
+            ladder_remove_redundant_parentheses(&right);
             memcpy(result[cnt].name, left.str, cstr_length(left));
             memcpy(result[cnt].value, right.str, cstr_length(right));
             ++cnt;
@@ -959,6 +968,7 @@ ladder_result_t* ladder(rung_t **rung, int *result_qty) {
         cstr_drop(&fn[n]);
 
     ladder_order_eval(&result, *result_qty);
+    ladder_correct_result(&result, *result_qty);
 
     return result;
 }
