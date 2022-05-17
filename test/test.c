@@ -210,6 +210,7 @@ int main(void) {
     printf("-------------------< TEST 6 >-------------------\n\n");
     ladder_rung_init(&rung);
 
+    ladder_rung_add_line(&rung, "          [10ms]--{ton%4_pt}                               ");
     ladder_rung_add_line(&rung, "    +-------------{ton%4_in}                               ");
     ladder_rung_add_line(&rung, " A--+             {ton%4_q}---------+---C---+------+--Y--Q ");
     ladder_rung_add_line(&rung, "    |                               |       |      |       ");
@@ -238,7 +239,6 @@ int main(void) {
     ladder_rung_add_line(&rung, "     |                 {eq%3_out}------------------+       ");
     ladder_rung_add_line(&rung, " R---+--{mux%1_S0}                                         ");
     ladder_rung_add_line(&rung, "                                                           ");
-    ladder_rung_add_line(&rung, " [10ms]--{ton%4_pt}                                        ");
 
     printf("- rung -\n");
     ladder_rung_print(rung);
