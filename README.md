@@ -8,10 +8,10 @@ Library for parse and simplify ladder diagram
 
 #### LIMITATIONS
 - An output must be the end of line or have only ORs
-- Others?
+- Node in first line must be the most left
 
 #### TODO
-- Evaluation Order
+- 
 
 ### EXAMPLE
 ```
