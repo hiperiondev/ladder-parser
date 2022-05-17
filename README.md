@@ -45,39 +45,15 @@ Library for parse and simplify ladder diagram
      |                 {eq%3_out}------------------+       
  R---+--{mux%1_S0}                                         
                                                            
-
---------- FINAL RESULT ---------
-
-[IN] 
-      INFIX: _N_1 = (A) | (D) | (F) 
-    POSTFIX: _N_1 = A D or F or 
-
-      INFIX: _N_4 = (((({ton%4_q}) | (!{mux%1_out})) & C) | ((({ton%4_q}) | (!{mux%1_out})) & !E) | ((({ton%4_q}) | (!{mux%1_out})) & G)) | (_N_5 & !X) | ({eq%3_out}) 
-    POSTFIX: _N_4 = {ton%4_q} {mux%1_out} not or C and {ton%4_q} {mux%1_out} not or E not and or {ton%4_q} {mux%1_out} not or G and or _N_5 X not and or {eq%3_out} or 
-
-      INFIX: _N_5 = (K & L & M & !N) | ({eq%3_eno}) 
-    POSTFIX: _N_5 = K L and M and N not and {eq%3_eno} or 
-
-      INFIX: _N_6 = ($c) | (V) 
-    POSTFIX: _N_6 = $c V or 
-
-      INFIX: _N_8 = (W) | (R) 
-    POSTFIX: _N_8 = W R or 
-
-
-[OUT] 
-      INFIX: Q = (_N_4 & Y) 
-    POSTFIX: Q = _N_4 Y and 
-
-      INFIX: $b = (_N_5) 
-    POSTFIX: $b = _N_5 
-
-
-[FUNCTIONS] 
-         FN: ton%4 = pt::([10ms]) in::(_N_1) 
-         FN: mux%1 = in0::(_N_1) in1::(!I & P) in2::($a1) in3::(T) S1::(_Q) S0::(_N_8) 
-         FN: eq%3 = en::({gt%2_out}) in1::(_N_6) in2::(_N_8) 
-         FN: gt%2 = in0::($b) in1::(_N_6) 
-
---------------------------------
+    NODE: _N_1 = (A) | (D) | (F) 
+    NODE: _N_4 = ((((({ton%4_q}) | (!{mux%1_out})) & C) | ((({ton%4_q}) | (!{mux%1_out})) & !E) | ((({ton%4_q}) | (!{mux%1_out})) & G))) | (_N_5 & !X) | ({eq%3_out}) 
+    NODE: _N_5 = (K & L & M & !N) | ({eq%3_eno}) 
+    NODE: _N_6 = ($c) | (V) 
+    NODE: _N_8 = (W) | (R) 
+  OUTPUT: Q = (_N_4 & Y) 
+  OUTPUT: $b = (_N_5) 
+FUNCTION: ton%4 = pt::([10ms]) in::(_N_1) 
+FUNCTION: mux%1 = in0::(_N_1) in1::(!I & P) in2::($a1) in3::(T) S1::(_Q) S0::(_N_8) 
+FUNCTION: eq%3 = en::({gt%2_out}) in1::(_N_6) in2::(_N_8) 
+FUNCTION: gt%2 = in0::($b) in1::(_N_6)
 ```
