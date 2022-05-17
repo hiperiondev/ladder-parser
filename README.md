@@ -16,6 +16,7 @@ Library for parse and simplify ladder diagram
 ### EXAMPLE
 ```
 - rung -
+          [10ms]--{ton%4_pt}                               
     +-------------{ton%4_in}                               
  A--+             {ton%4_q}---------+---C---+------+--Y--Q 
     |                               |       |      |       
@@ -44,7 +45,6 @@ Library for parse and simplify ladder diagram
      |                 {eq%3_out}------------------+       
  R---+--{mux%1_S0}                                         
                                                            
- [10ms]--{ton%4_pt}                                        
 
 --------- FINAL RESULT ---------
 
@@ -74,7 +74,7 @@ Library for parse and simplify ladder diagram
 
 
 [FUNCTIONS] 
-         FN: ton%4 = in::(_N_1) pt::([10ms]) 
+         FN: ton%4 = pt::([10ms]) in::(_N_1) 
          FN: mux%1 = in0::(_N_1) in1::(!I & P) in2::($a1) in3::(T) S1::(_Q) S0::(_N_8) 
          FN: eq%3 = en::({gt%2_out}) in1::(_N_6) in2::(_N_8) 
          FN: gt%2 = in0::($b) in1::(_N_6) 
