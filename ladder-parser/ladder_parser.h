@@ -25,9 +25,6 @@
 #ifndef LADDER_PARSER_H_
 #define LADDER_PARSER_H_
 
-#include <stdbool.h>
-
-#include "cstr.h"
 #include "rung.h"
 
 //#define LADDER_DEBUG
@@ -46,6 +43,5 @@ typedef struct ladder_result {
 } ladder_result_t;
 
 ladder_result_t* ladder(rung_t **rung, int *result_qty);
-void ladder_parse(cstr **in, cstr **out, int *in_qty, int *out_qty, cstr **fn, int *fn_qty, rung_t **rung);
 
 #endif /* LADDER_PARSER_H_ */

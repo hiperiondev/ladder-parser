@@ -792,9 +792,37 @@ void ladder_separate_functions(cstr *str_in, cstr *str_out, int str_in_qty, int 
     free(f_out_id);
 }
 
-void ladder_order_eval(cstr **in, cstr **out, int *in_qty, int *out_qty, cstr **fn, int *fn_qty, cstr **ret) {
+void ladder_order_eval(ladder_result_t **result, int result_qty) {
+    bool swap = true;
+    int n, m;
+    ladder_result_t tmp1, tmp2;
+    cstr name_next = cstr_with_capacity(1);
+    cstr value = cstr_with_capacity(1);
 
+    while (swap) {
+        swap = false;
+        for (n = 0; n < result_qty - 1; n++) {
+            for (m = n + 1; m < result_qty; m++) {
+                if ((*result)[m].type == LD_OUTPUT)
+                    continue;
+                cstr_assign(&name_next, (*result)[m].name);
+                cstr_assign(&value, (*result)[n].value);
+                if (cstr_contains(value, name_next.str)) {
+#ifdef LADDER_DEBUG
+                    printf("swap: %d, %d / %s / %s\n", n, m, (*result)[n].name, (*result)[m].name);
+#endif
+                    tmp1 = (*result)[n];
+                    tmp2 = (*result)[m];
+                    (*result)[m] = tmp1;
+                    (*result)[n] = tmp2;
 
+                    swap = true;
+                }
+            }
+        }
+    }
+    cstr_drop(&name_next);
+    cstr_drop(&value);
 }
 
 void ladder_parse(cstr **in, cstr **out, int *in_qty, int *out_qty, cstr **fn, int *fn_qty, rung_t **rung) {
@@ -929,6 +957,8 @@ ladder_result_t* ladder(rung_t **rung, int *result_qty) {
 
     for (n = 0; n < fn_qty; n++)
         cstr_drop(&fn[n]);
+
+    ladder_order_eval(&result, *result_qty);
 
     return result;
 }
