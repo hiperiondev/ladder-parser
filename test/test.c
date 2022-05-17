@@ -32,63 +32,9 @@
 #include "utils.h"
 #include "ladder_parser.h"
 
-void print_result(cstr *result_in, cstr *result_out, int result_in_qty, int result_out_qty, cstr *fn, int fn_qty) {
-    int n;
-    cstr postfix;
-
-    printf("\n--------- FINAL RESULT ---------\n\n");
-
-    printf("[IN] \n");
-    for (n = 0; n < result_in_qty; n++) {
-        if (cstr_size(result_in[n]) > 0) {
-            ladder_remove_redundant_parentheses(&result_in[n]);
-            printf("      INFIX: %s\n", result_in[n].str);
-            printf("    POSTFIX: ");
-            postfix = cstr_with_capacity(1);
-            ladder_to_postfix(&postfix, result_in[n].str);
-            printf("%s\n\n", postfix.str);
-            cstr_drop(&postfix);
-        }
-    }
-
-    printf("\n[OUT] \n");
-    for (n = 0; n < result_out_qty; n++) {
-        if (cstr_size(result_out[n]) > 0) {
-            ladder_remove_redundant_parentheses(&result_out[n]);
-            printf("      INFIX: %s\n", result_out[n].str);
-            printf("    POSTFIX: ");
-            postfix = cstr_with_capacity(1);
-            ladder_to_postfix(&postfix, result_out[n].str);
-            printf("%s\n\n", postfix.str);
-            cstr_drop(&postfix);
-        }
-    }
-    printf("\n[FUNCTIONS] \n");
-    for (n = 0; n < fn_qty; n++) {
-        if (cstr_size(fn[n]) > 0) {
-            printf("         FN: %s\n", fn[n].str);
-        }
-    }
-
-    printf("\n--------------------------------\n\n");
-}
-
-void free_results(cstr **in, cstr **out, cstr **fn, int in_qty, int out_qty, int fn_qty) {
-    int n;
-
-    for (n = 0; n < in_qty; n++)
-        cstr_drop(&(*in)[n]);
-
-    for (n = 0; n < out_qty; n++)
-            cstr_drop(&(*out)[n]);
-
-    for (n = 0; n < fn_qty; n++)
-            cstr_drop(&(*fn)[n]);
-}
-
 int main(void) {
-    cstr *in, *out, *fn;
-    int in_qty, out_qty, fn_qty;
+    ladder_result_t *result;
+    int result_qty;
     rung_t *rung;
 
     printf("-----------------< TEST 1 >----------------\n\n");
@@ -105,11 +51,12 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
-    print_result(in, out, in_qty, out_qty, fn, fn_qty);
-
+    result = ladder(&rung, &result_qty);
     ladder_rung_destroy(&rung);
-    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
+
+    ladder_print_results(result, result_qty);
+
+    free(result);
 
     /////////////////////////
 
@@ -126,11 +73,12 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
-    print_result(in, out, in_qty, out_qty, fn, fn_qty);
-
+    result = ladder(&rung, &result_qty);
     ladder_rung_destroy(&rung);
-    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
+
+    ladder_print_results(result, result_qty);
+
+    free(result);
 
     /////////////////////////
 
@@ -149,11 +97,12 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
-    print_result(in, out, in_qty, out_qty, fn, fn_qty);
-
+    result = ladder(&rung, &result_qty);
     ladder_rung_destroy(&rung);
-    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
+
+    ladder_print_results(result, result_qty);
+
+    free(result);
 
     /////////////////////////
 
@@ -172,11 +121,12 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
-    print_result(in, out, in_qty, out_qty, fn, fn_qty);
-
+    result = ladder(&rung, &result_qty);
     ladder_rung_destroy(&rung);
-    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
+
+    ladder_print_results(result, result_qty);
+
+    free(result);
 
     /////////////////////////
 
@@ -199,11 +149,12 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
-    print_result(in, out, in_qty, out_qty, fn, fn_qty);
-
+    result = ladder(&rung, &result_qty);
     ladder_rung_destroy(&rung);
-    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
+
+    ladder_print_results(result, result_qty);
+
+    free(result);
 
     /////////////////////////
 
@@ -242,11 +193,13 @@ int main(void) {
 
     printf("- rung -\n");
     ladder_rung_print(rung);
-    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, &rung);
-    print_result(in, out, in_qty, out_qty, fn, fn_qty);
 
+    result = ladder(&rung, &result_qty);
     ladder_rung_destroy(&rung);
-    free_results(&in, &out, &fn, in_qty, out_qty, fn_qty);
+
+    ladder_print_results(result, result_qty);
+
+    free(result);
 
     return EXIT_SUCCESS;
 }

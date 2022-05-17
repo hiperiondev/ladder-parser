@@ -25,8 +25,10 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+#include "ladder_parser.h"
 #include "cstr.h"
 
+void ladder_print_results (ladder_result_t* result, int result_qty);
 void ladder_remove_redundant_parentheses(cstr *expression);
 void ladder_to_postfix(cstr *postfix, char *eqn);
 

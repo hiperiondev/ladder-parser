@@ -32,6 +32,20 @@
 
 //#define LADDER_DEBUG
 
+enum ladder_type {
+    LD_NODE,
+    LD_FUNCTION,
+    LD_OUTPUT
+};
+typedef enum ladder_type ladder_type_t;
+
+typedef struct ladder_result {
+    ladder_type_t type; // node, function, output
+    char *name;
+    char *value;
+} ladder_result_t;
+
+ladder_result_t* ladder(rung_t **rung, int *result_qty);
 void ladder_parse(cstr **in, cstr **out, int *in_qty, int *out_qty, cstr **fn, int *fn_qty, rung_t **rung);
 
 #endif /* LADDER_PARSER_H_ */

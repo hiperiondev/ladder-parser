@@ -861,6 +861,74 @@ void ladder_parse(cstr **in, cstr **out, int *in_qty, int *out_qty, cstr **fn, i
     *out_qty = str_out_qty;
     *fn = functions;
     *fn_qty = functions_qty;
+}
 
+ladder_result_t *result;
+ladder_result_t* ladder(rung_t **rung, int *result_qty) {
+    cstr *in, *out, *fn;
+    int in_qty, out_qty, fn_qty, n, pos, cnt = 0;
+    cstr left = cstr_with_capacity(1);
+    cstr right = cstr_with_capacity(1);
 
+    ladder_parse(&in, &out, &in_qty, &out_qty, &fn, &fn_qty, rung);
+    result = malloc((in_qty + out_qty + fn_qty) * sizeof(ladder_result_t));
+
+    for (n = 0; n < in_qty; n++) {
+        if (cstr_length(in[n]) > 0) {
+            result[cnt].type = LD_NODE;
+
+            pos = cstr_find(in[n], "=");
+            cstr_assign_n(&left, in[n].str, pos - 1);
+            cstr_assign(&right, in[n].str + pos + 2);
+            result[cnt].name = calloc(cstr_length(left) + 1, sizeof(char));
+            result[cnt].value = calloc(cstr_length(right) + 1, sizeof(char));
+            memcpy(result[cnt].name, left.str, cstr_length(left));
+            memcpy(result[cnt].value, right.str, cstr_length(right));
+            ++cnt;
+        }
+    }
+
+    for (n = 0; n < out_qty; n++) {
+        if (cstr_length(out[n]) > 0) {
+            result[cnt].type = LD_OUTPUT;
+
+            pos = cstr_find(out[n], "=");
+            cstr_assign_n(&left, out[n].str, pos - 1);
+            cstr_assign(&right, out[n].str + pos + 2);
+            result[cnt].name = calloc(cstr_length(left) + 1, sizeof(char));
+            result[cnt].value = calloc(cstr_length(right) + 1, sizeof(char));
+            memcpy(result[cnt].name, left.str, cstr_length(left));
+            memcpy(result[cnt].value, right.str, cstr_length(right));
+            ++cnt;
+        }
+    }
+
+    for (n = 0; n < fn_qty; n++) {
+        if (cstr_length(fn[n]) > 0) {
+            result[cnt].type = LD_FUNCTION;
+
+            pos = cstr_find(fn[n], "=");
+            cstr_assign_n(&left, fn[n].str, pos - 1);
+            cstr_assign(&right, fn[n].str + pos + 2);
+            result[cnt].name = calloc(cstr_length(left) + 1, sizeof(char));
+            result[cnt].value = calloc(cstr_length(right) + 1, sizeof(char));
+            memcpy(result[cnt].name, left.str, cstr_length(left));
+            memcpy(result[cnt].value, right.str, cstr_length(right));
+            ++cnt;
+        }
+    }
+    *result_qty = cnt;
+
+    cstr_drop(&left);
+    cstr_drop(&right);
+    for (n = 0; n < in_qty; n++)
+        cstr_drop(&in[n]);
+
+    for (n = 0; n < out_qty; n++)
+        cstr_drop(&out[n]);
+
+    for (n = 0; n < fn_qty; n++)
+        cstr_drop(&fn[n]);
+
+    return result;
 }

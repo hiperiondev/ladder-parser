@@ -26,7 +26,9 @@
 #include <limits.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <stdbool.h>
 
+#include "ladder_parser.h"
 #include "cstr.h"
 #define i_type iStack
 #define i_val int
@@ -44,6 +46,26 @@ struct Stack {
 };
 
 static char* infix_to_postfix(const char *inf, size_t len);
+
+void ladder_print_results (ladder_result_t* result, int result_qty) {
+    int n;
+    char type[50];
+
+    for (n = 0; n < result_qty; n++) {
+        switch ((result[n]).type) {
+            case LD_NODE:
+                sprintf(type, "    NODE");
+                break;
+            case LD_FUNCTION:
+                sprintf(type, "FUNCTION");
+                break;
+            case LD_OUTPUT:
+                sprintf(type, "  OUTPUT");
+                break;
+        }
+        printf("%s: %s = %s\n", type, result[n].name, result[n].value);
+    }
+}
 
 bool ladder_remove_redundant_parentheses(cstr *expression) {
     char c[2];
