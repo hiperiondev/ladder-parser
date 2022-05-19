@@ -46,10 +46,12 @@ struct Stack {
 };
 
 static char* infix_to_postfix(const char *inf, size_t len);
+void ladder_to_postfix(cstr *postfix, char *eqn);
 
 void ladder_print_results (ladder_result_t* result, int result_qty) {
     int n;
     char type[50];
+    cstr res = cstr_with_capacity(1);
 
     for (n = 0; n < result_qty; n++) {
         switch ((result[n]).type) {
@@ -64,7 +66,13 @@ void ladder_print_results (ladder_result_t* result, int result_qty) {
                 break;
         }
         printf("%s: %s = %s\n", type, result[n].name, result[n].value);
+        if ((result[n]).type != LD_FUNCTION) {
+            ladder_to_postfix(&res, result[n].value);
+            printf("          postfix: %s\n", res.str);
+        }
     }
+
+    cstr_drop(&res);
 }
 
 bool ladder_remove_redundant_parentheses(cstr *expression) {

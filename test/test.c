@@ -188,7 +188,7 @@ int main(void) {
     ladder_rung_add_line(&rung, " W---+-----------------{eq%3_in2}    |             |       ");
     ladder_rung_add_line(&rung, "     |                 {eq%3_eno}----+----$b       |       ");
     ladder_rung_add_line(&rung, "     |                 {eq%3_out}------------------+       ");
-    ladder_rung_add_line(&rung, " R---+--{mux%1_S0}                                         ");
+    ladder_rung_add_line(&rung, " R---+---------------{mux%1_S0}                            ");
     ladder_rung_add_line(&rung, "                                                           ");
 
     printf("- rung -\n");
