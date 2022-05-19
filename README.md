@@ -43,17 +43,24 @@ Library for parse and simplify ladder diagram
  W---+-----------------{eq%3_in2}    |             |       
      |                 {eq%3_eno}----+----$b       |       
      |                 {eq%3_out}------------------+       
- R---+--{mux%1_S0}                                         
+ R---+---------------{mux%1_S0}                            
                                                            
     NODE: _N_1 = A | D | F 
+          postfix: A D or F or 
     NODE: _N_6 = $c | V 
+          postfix: $c V or 
 FUNCTION: ton%4 = pt::[10ms] in::_N_1 
 FUNCTION: gt%2 = in0::$b in1::_N_6 
     NODE: _N_8 = W | R 
+          postfix: W R or 
 FUNCTION: mux%1 = in0::_N_1 in1::(!I & P) in2::$a1 in3::T S1::_Q S0::_N_8 
 FUNCTION: eq%3 = en::{gt%2_out} in1::_N_6 in2::_N_8 
     NODE: _N_5 = (K & L & M & !N) | {eq%3_eno} 
+          postfix: K L and M and N not and {eq%3_eno} or 
     NODE: _N_4 = ((({ton%4_q} | !{mux%1_out}) & C) | (({ton%4_q} | !{mux%1_out}) & !E) | (({ton%4_q} | !{mux%1_out}) & G)) | (_N_5 & !X) | {eq%3_out} 
+          postfix: {ton%4_q} {mux%1_out} not or C and {ton%4_q} {mux%1_out} not or E not and or {ton%4_q} {mux%1_out} not or G and or _N_5 X not and or {eq%3_out} or 
   OUTPUT: $b = _N_5 
-  OUTPUT: Q = (_N_4 & Y)
+          postfix: _N_5 
+  OUTPUT: Q = (_N_4 & Y) 
+          postfix: _N_4 Y and
 ```
