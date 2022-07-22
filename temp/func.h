@@ -22,27 +22,25 @@
  *
  */
 
-#ifndef LADDER_PARSER_H_
-#define LADDER_PARSER_H_
+#ifndef FUNC_H_
+#define FUNC_H_
 
-#include "rung.h"
+#include "cstr.h"
 
-#define LADDER_DEBUG
+typedef enum {
+    NOVARARGS = 0,
+    VARARGS = 1,
+} varargs_t;
 
-enum ladder_type {
-    LD_NODE,
-    LD_FUNCTION,
-    LD_OUTPUT
-};
-typedef enum ladder_type ladder_type_t;
+typedef struct func {
+    varargs_t varargs;
+         char name[254];
+          int args_qty;
+         char args[254][254];
+} func_t;
 
-typedef struct ladder_result {
-    ladder_type_t type; // node, function, output
-    char *name;
-    char *value;
-} ladder_result_t;
+void ladder_func_init(func_t ***func);
+void ladder_func_destroy(func_t ***func);
+void ladder_func_add(func_t ***func, char *name, varargs_t vararg, char *args);
 
-ladder_result_t* ladder(rung_t **rung, int *result_qty);
-         uint8_t ladder_find_st_sp(cstr str, cstr *res, char *start, char *end, size_t *pos_start, size_t *pos_end);
-
-#endif /* LADDER_PARSER_H_ */
+#endif /* FUNC_H_ */

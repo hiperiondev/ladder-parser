@@ -192,8 +192,9 @@ int ladder_unify_nodes(rung_t **rung, cell_t ***lns) {
 
 int ladder_separate_blocks(cell_t ***blocks_tmp, rung_t **rung, int nodes_qty, cell_t ***lns) { // +--[...]--+
      int line, column, pos, block;
-    bool and;
+    bool and, start;
 
+    start = false;
     and = false;
     block = 0;
 
@@ -206,27 +207,40 @@ int ladder_separate_blocks(cell_t ***blocks_tmp, rung_t **rung, int nodes_qty, c
     for (line = 0; line < (*rung)->line_qty; line++) {
         for (column = 0; column < (*rung)->line_len; column++) {
 
+            if((*lns)[line][column].type == CELL_SPACE || (*lns)[line][column].type == CELL_OR) {
+                start = false;
+                continue;
+            }
+
             if ((*lns)[line][column].type == CELL_STR) {
                 (*blocks_tmp)[block][pos].type = (*lns)[line][column].type;
                 (*blocks_tmp)[block][pos].neg = (*lns)[line][column].neg;
                 (*blocks_tmp)[block][pos].str = (char*) malloc((strlen((*lns)[line][column].str) + 1) * sizeof(char));
                 strcpy((*blocks_tmp)[block][pos++].str, (*lns)[line][column].str);
 
+                start = true;
                 and = false;
                 continue;
             }
 
             if ((*lns)[line][column].type == CELL_AND && !and) {
                 (*blocks_tmp)[block][pos++].type = (*lns)[line][column].type;
+
+                start = true;
                 and = true;
                 continue;
             }
 
             if ((*lns)[line][column].type == CELL_NODE) {
+                if (!start && ((*lns)[line][column + 1].type == CELL_SPACE || (*lns)[line][column + 1].type == CELL_OR))
+                    continue;
+
                 (*blocks_tmp)[block][pos].type = CELL_NODE;
                 (*blocks_tmp)[block][pos].index = (*lns)[line][column].index;
 
                 ++block;
+
+                start = !start;
 
                 pos = 0;
                 (*blocks_tmp)[block][pos].type = CELL_NODE;

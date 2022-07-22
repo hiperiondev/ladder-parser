@@ -22,27 +22,47 @@
  *
  */
 
-#ifndef LADDER_PARSER_H_
-#define LADDER_PARSER_H_
+#include <stddef.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
 
-#include "rung.h"
+#include "func.h"
+#include "ladder_parser.h"
 
-#define LADDER_DEBUG
+int funcs_qty = 0;
 
-enum ladder_type {
-    LD_NODE,
-    LD_FUNCTION,
-    LD_OUTPUT
-};
-typedef enum ladder_type ladder_type_t;
+void ladder_func_init(func_t ***func) {
+    *func = malloc(sizeof(func_t*));
+}
 
-typedef struct ladder_result {
-    ladder_type_t type; // node, function, output
-    char *name;
-    char *value;
-} ladder_result_t;
+void ladder_func_destroy(func_t ***func) {
 
-ladder_result_t* ladder(rung_t **rung, int *result_qty);
-         uint8_t ladder_find_st_sp(cstr str, cstr *res, char *start, char *end, size_t *pos_start, size_t *pos_end);
+}
 
-#endif /* LADDER_PARSER_H_ */
+void ladder_func_add(func_t ***func, char *name, varargs_t vararg, char *args) {
+    int q = 0;
+
+    memcpy((*func)[funcs_qty]->name, name, strlen(name) + 1);
+
+    (*func)[funcs_qty]->varargs = vararg;
+
+    char delim[] = " ";
+    char *ptr = strtok(args, delim);
+
+    while (ptr != NULL) {
+        memcpy((*func)[funcs_qty]->args[q], ptr, strlen(ptr) + 1);
+        ptr = strtok(NULL, delim);
+        q++;
+    }
+
+    (*func)[funcs_qty]->args_qty = q;
+    funcs_qty++;
+
+    *func = realloc(*func, sizeof(func_t*) * (funcs_qty + 1));
+        (*func)[funcs_qty] = malloc(sizeof(func_t));
+
+}
+
+
+

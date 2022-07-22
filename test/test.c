@@ -31,11 +31,13 @@
 #include "cstr.h"
 #include "utils.h"
 #include "ladder_parser.h"
+//#include "func.h"
 
 int main(void) {
     ladder_result_t *result;
     int result_qty;
     rung_t *rung;
+    //func_t **funcs;
 
     printf("-----------------< TEST 1 >----------------\n\n");
     ladder_rung_init(&rung);
@@ -60,7 +62,7 @@ int main(void) {
 
     /////////////////////////
 
-    printf("-----------------< TEST 2 >----------------\n\n");
+    printf("\n-----------------< TEST 2 >----------------\n\n");
     ladder_rung_init(&rung);
 
     ladder_rung_add_line(&rung, "A--+--+--/B--+--C--+-----+---Q ");
@@ -82,7 +84,7 @@ int main(void) {
 
     /////////////////////////
 
-    printf("-------------------< TEST 3 >-------------------\n\n");
+    printf("\n-------------------< TEST 3 >-------------------\n\n");
     ladder_rung_init(&rung);
 
     ladder_rung_add_line(&rung, " A--+--+--/B--+--C--+----+---Q ");
@@ -106,7 +108,7 @@ int main(void) {
 
     /////////////////////////
 
-    printf("-------------------< TEST 4 >-------------------\n\n");
+    printf("\n-------------------< TEST 4 >-------------------\n\n");
     ladder_rung_init(&rung);
 
     ladder_rung_add_line(&rung, " A--+--+-/B---+---C---+-----+--O--+--Q ");
@@ -130,8 +132,11 @@ int main(void) {
 
     /////////////////////////
 
-    printf("-------------------< TEST 5 >-------------------\n\n");
+    printf("\n-------------------< TEST 5 >-------------------\n\n");
     ladder_rung_init(&rung);
+    //ladder_func_init(&funcs);
+
+    //ladder_func_add(&funcs, "Func", NOVARARGS, "in[1] in[2] in[3]");
 
     ladder_rung_add_line(&rung, " A--+-+-/B-----------------+---C---+---+-----Q ");
     ladder_rung_add_line(&rung, "    | |                    |       |   |       ");
@@ -158,13 +163,17 @@ int main(void) {
 
     /////////////////////////
 
-    printf("-------------------< TEST 6 >-------------------\n\n");
+    printf("\n-------------------< TEST 6 >-------------------\n\n");
     ladder_rung_init(&rung);
 
-    ladder_rung_add_line(&rung, "          [10ms]--{ton%4_pt}                               ");
+    //ladder_func_add(&funcs, "ton", NOVARARGS, "pt in");
+    //ladder_func_add(&funcs, "mux", VARARGS  , "S0 S1");
+    //ladder_func_add(&funcs, "gt" , NOVARARGS, "in0 in1");
+    //ladder_func_add(&funcs, "eq" , NOVARARGS, "en in1 in2");
+
     ladder_rung_add_line(&rung, "    +-------------{ton%4_in}                               ");
     ladder_rung_add_line(&rung, " A--+             {ton%4_q}---------+---C---+------+--Y--Q ");
-    ladder_rung_add_line(&rung, "    |                               |       |      |       ");
+    ladder_rung_add_line(&rung, "    |     [10ms]--{ton%4_pt}        |       |      |       ");
     ladder_rung_add_line(&rung, " D--+                               +--/E---+      |       ");
     ladder_rung_add_line(&rung, "    |                               |       |      |       ");
     ladder_rung_add_line(&rung, " F--+                               +---G---+      |       ");
@@ -188,8 +197,31 @@ int main(void) {
     ladder_rung_add_line(&rung, " W---+-----------------{eq%3_in2}    |             |       ");
     ladder_rung_add_line(&rung, "     |                 {eq%3_eno}----+----$b       |       ");
     ladder_rung_add_line(&rung, "     |                 {eq%3_out}------------------+       ");
-    ladder_rung_add_line(&rung, " R---+---------------{mux%1_S0}                            ");
+    ladder_rung_add_line(&rung, " R---+-----{mux%1_S0}                                      ");
     ladder_rung_add_line(&rung, "                                                           ");
+
+    printf("- rung -\n");
+    ladder_rung_print(rung);
+
+    result = ladder(&rung, &result_qty);
+    ladder_rung_destroy(&rung);
+
+    ladder_print_results(result, result_qty);
+
+    free(result);
+
+    /////////////////////////
+
+    printf("\n-------------------< TEST 6 >-------------------\n");
+    printf(" Special case: AVOID!\n\n");
+
+    ladder_rung_init(&rung);
+
+    ladder_rung_add_line(&rung, " Z--+-----A-----+--Q ");
+    ladder_rung_add_line(&rung, "    |           |    ");
+    ladder_rung_add_line(&rung, "    +--B--+--C--+    ");
+    ladder_rung_add_line(&rung, "          |          ");
+    ladder_rung_add_line(&rung, " J--------+          ");
 
     printf("- rung -\n");
     ladder_rung_print(rung);
