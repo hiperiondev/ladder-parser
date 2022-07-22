@@ -16,10 +16,9 @@ Library for parse and simplify ladder diagram
 ### EXAMPLE
 ```
 - rung -
-          [10ms]--{ton%4_pt}                               
     +-------------{ton%4_in}                               
  A--+             {ton%4_q}---------+---C---+------+--Y--Q 
-    |                               |       |      |       
+    |     [10ms]--{ton%4_pt}        |       |      |       
  D--+                               +--/E---+      |       
     |                               |       |      |       
  F--+                               +---G---+      |       
@@ -43,13 +42,13 @@ Library for parse and simplify ladder diagram
  W---+-----------------{eq%3_in2}    |             |       
      |                 {eq%3_eno}----+----$b       |       
      |                 {eq%3_out}------------------+       
- R---+---------------{mux%1_S0}                            
+ R---+-----{mux%1_S0}                                      
                                                            
     NODE: _N_1 = A | D | F 
           postfix: A D or F or 
     NODE: _N_6 = $c | V 
           postfix: $c V or 
-FUNCTION: ton%4 = pt::[10ms] in::_N_1 
+FUNCTION: ton%4 = in::_N_1 pt::[10ms] 
 FUNCTION: gt%2 = in0::$b in1::_N_6 
     NODE: _N_8 = W | R 
           postfix: W R or 
@@ -62,5 +61,5 @@ FUNCTION: eq%3 = en::{gt%2_out} in1::_N_6 in2::_N_8
   OUTPUT: $b = _N_5 
           postfix: _N_5 
   OUTPUT: Q = (_N_4 & Y) 
-          postfix: _N_4 Y and
+          postfix: _N_4 Y and 
 ```
