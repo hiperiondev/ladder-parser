@@ -134,9 +134,6 @@ int main(void) {
 
     printf("\n-------------------< TEST 5 >-------------------\n\n");
     ladder_rung_init(&rung);
-    //ladder_func_init(&funcs);
-
-    //ladder_func_add(&funcs, "Func", NOVARARGS, "in[1] in[2] in[3]");
 
     ladder_rung_add_line(&rung, " A--+-+-/B-----------------+---C---+---+-----Q ");
     ladder_rung_add_line(&rung, "    | |                    |       |   |       ");
@@ -165,11 +162,6 @@ int main(void) {
 
     printf("\n-------------------< TEST 6 >-------------------\n\n");
     ladder_rung_init(&rung);
-
-    //ladder_func_add(&funcs, "ton", NOVARARGS, "pt in");
-    //ladder_func_add(&funcs, "mux", VARARGS  , "S0 S1");
-    //ladder_func_add(&funcs, "gt" , NOVARARGS, "in0 in1");
-    //ladder_func_add(&funcs, "eq" , NOVARARGS, "en in1 in2");
 
     ladder_rung_add_line(&rung, "    +-------------{ton%4_in}                               ");
     ladder_rung_add_line(&rung, " A--+             {ton%4_q}---------+---C---+------+--Y--Q ");
